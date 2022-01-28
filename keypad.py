@@ -10,7 +10,7 @@ from kivy.properties import ObjectProperty
 import credentials as creds #file with db credentials
 import pymysql.cursors
 
-#Connecting to the Database
+# Connecting to the Database
 connection = pymysql.connect(host=creds.dbhost,
                              user=creds.dbuser,
                              password=creds.dbpass,
@@ -35,14 +35,15 @@ def allowed_machines(id): #returns list of machine IDs that a student can use
 
 class IDScreen(Screen):
     id_label = ObjectProperty() #make id text accessible here
-    def on_enter(self, *args): 
+    def on_enter(self, *args):
+        self.id_label.text = 'ID: '
         return super().on_enter(*args)
 
     def updateID(self, key):
         if (key.isnumeric() and len(self.id_label.text) < 9): #add only 5 numbers
             self.id_label.text += key
-        elif (key == 'delete' and len(self.id_label.text) > 4):
-            self.id_label.text = self.id_label.text[:-1] #don't delete 'ID: '
+        elif (key == 'delete' and len(self.id_label.text) > 4): #don't delete 'ID: '
+            self.id_label.text = self.id_label.text[:-1]
 
     def sendID(self):
         if (len(self.id_label.text) == 9):
@@ -52,18 +53,29 @@ class IDScreen(Screen):
             if allowed != -1:
                 self.manager.current = 'machine' #switch screen
             self.id_label.text = 'ID: '
-            
-            
 
 
 
 
 class MachineScreen(Screen):
-    pass
+    red = [1, 0, 0, 1]
+    green = [0, 1, 0, 1]
+    status = [red, green]
+    def on_enter(self, *args):
+        for id in self.ids:
+            self.ids[id].background_color = MachineScreen.status[0]
+        return super().on_enter(*args)
+
+    def sendMachines(self):
+        selectedMachines = []
+        for id in self.ids:
+            if self.ids[id].background_color == MachineScreen.status[1]:
+                selectedMachines.append(id)
+        print(selectedMachines)
+        self.manager.current = 'ID'
 
 class KeypadApp(App):
     def build(self):
-        # Builder.load_file('keypad.kv')
         sm = ScreenManager()
         sm.add_widget(IDScreen(name='ID'))
         sm.add_widget(MachineScreen(name='machine'))

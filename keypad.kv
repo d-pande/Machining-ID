@@ -11,50 +11,118 @@
         GridLayout:
             cols: 3
             rows: 4
-            size_hint_x: 1.25
+            spacing: [5]
+            padding: [10]
             Button:
                 text: '1'
-                on_press: root.updateID('1')
+                on_press: root.updateID(self.text)
             Button:
                 text: '2'
-                on_press: root.updateID('2')
+                on_press: root.updateID(self.text)
             Button:
                 text: '3'
-                on_press: root.updateID('3')
+                on_press: root.updateID(self.text)
             Button:
                 text: '4'
-                on_press: root.updateID('4')
+                on_press: root.updateID(self.text)
             Button:
                 text: '5'
-                on_press: root.updateID('5')
+                on_press: root.updateID(self.text)
             Button:
                 text: '6'
-                on_press: root.updateID('6')
+                on_press: root.updateID(self.text)
             Button:
                 text: '7'
-                on_press: root.updateID('7')
+                on_press: root.updateID(self.text)
             Button:
                 text: '8'
-                on_press: root.updateID('8')
+                on_press: root.updateID(self.text)
             Button:
                 text: '9'
-                on_press: root.updateID('9')
+                on_press: root.updateID(self.text)
             Button:
                 text: 'delete'
-                on_press: root.updateID('delete')
+                on_press: root.updateID(self.text)
             Button:
                 text: '0'
-                on_press: root.updateID('0')
+                on_press: root.updateID(self.text)
             Button:
                 text: 'enter'
                 on_press: root.sendID()
-            
-            
-            
-        
+
 
 <MachineScreen>:
-    StackLayout:
+    GridLayout:
+        rows: 5
+        cols: 5
+        spacing: [20]
+        padding: [40]
         Button:
-            text: 'Go to ID'
-            on_press: root.manager.current = 'ID'
+            id: 1
+            text: 'Tormach'
+            background_normal: ''
+            background_color: root.red
+            on_release: self.background_color = root.status[1 - root.status.index(self.background_color)]
+        Button:
+            id: 2
+            text: 'Bosslaser'
+            background_normal: ''
+            background_color: root.red
+            on_release: self.background_color = root.status[1 - root.status.index(self.background_color)]
+        Button:
+            id: 3
+            text: 'Prusa MINI'
+            background_normal: ''
+            background_color: root.red
+            on_release: self.background_color = root.status[1 - root.status.index(self.background_color)]
+        Button:
+            id: 4
+            text: 'Prusa i3'
+            background_normal: ''
+            background_color: root.red
+            on_release: self.background_color = root.status[1 - root.status.index(self.background_color)]
+        Button:
+            id: 5
+            text: 'Afinia H+1'
+            background_normal: ''
+            background_color: root.red
+            on_release: self.background_color = root.status[1 - root.status.index(self.background_color)]
+        Button:
+            id: 6
+            text: 'Bandsaw'
+            background_normal: ''
+            background_color: root.red
+            on_release: self.background_color = root.status[1 - root.status.index(self.background_color)]
+        Button:
+            id: 7
+            text: 'Sanding Belt'
+            background_normal: ''
+            background_color: root.red
+            on_release: self.background_color = root.status[1 - root.status.index(self.background_color)]
+        Button:
+            id: 8
+            text: 'Drill Press'
+            background_normal: ''
+            background_color: root.red
+            on_release: self.background_color = root.status[1 - root.status.index(self.background_color)]
+        Button:
+            id: 9
+            text: 'Heat Gun'
+            background_normal: ''
+            background_color: root.red
+            on_release: self.background_color = root.status[1 - root.status.index(self.background_color)]
+        Button:
+            id: 10
+            text: 'Dremel'
+            background_normal: ''
+            background_color: root.red
+            on_release: self.background_color = root.status[1 - root.status.index(self.background_color)]
+        Button:
+            id: 11
+            text: 'Soldering'
+            background_normal: ''
+            background_color: root.red
+            on_release: self.background_color = root.status[1 - root.status.index(self.background_color)]
+        Button:
+            text: 'Confirm'
+            on_press: root.sendMachines()
