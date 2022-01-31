@@ -35,6 +35,7 @@ def allowed_machines(id): #returns list of machine IDs that a student can use
 
 class IDScreen(Screen):
     id_label = ObjectProperty() #make id text accessible here
+    curr_id = ''
     def on_enter(self, *args):
         self.id_label.text = 'ID: '
         return super().on_enter(*args)
@@ -53,6 +54,7 @@ class IDScreen(Screen):
             if allowed != -1:
                 self.manager.current = 'machine' #switch screen
             self.id_label.text = 'ID: '
+            IDScreen.curr_id = id
 
 
 
@@ -72,6 +74,7 @@ class MachineScreen(Screen):
             if self.ids[id].background_color == MachineScreen.status[1]:
                 selectedMachines.append(id)
         print(selectedMachines)
+        print(IDScreen.curr_id)
         self.manager.current = 'ID'
 
 class KeypadApp(App):
