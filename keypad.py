@@ -10,6 +10,9 @@ from kivy.properties import ObjectProperty
 import credentials as creds #file with db credentials
 import pymysql.cursors
 
+import time
+from datetime import datetime
+
 # Connecting to the Database
 connection = pymysql.connect(host=creds.dbhost,
                              user=creds.dbuser,
@@ -33,6 +36,19 @@ def allowed_machines(id): #returns list of machine IDs that a student can use
                 machs.append(l[0]) #being stored as ints
             return machs
 
+def log(id, machs): #logs a student entering the room given an id and list of machines
+    connection.ping(True)
+    with connection:
+        with connection.cursor() as cursor:
+            timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            cursor.execute("insert into log (sid, time_in) values ("+str(id)+", '"+timestamp+"')")
+            connection.commit()
+            print(machs)
+            for m in machs:
+                cursor.execute("insert into log_machines (time_in, machine_id) values ('"+timestamp+"', "+str(m)+")")
+                connection.commit()
+            
+
 class IDScreen(Screen):
     id_label = ObjectProperty() #make id text accessible here
     curr_id = ''
@@ -49,8 +65,7 @@ class IDScreen(Screen):
     def sendID(self):
         if (len(self.id_label.text) == 9):
             id = self.id_label.text[4:]
-            # print(id)
-            allowed = allowed_machines(id) #SEND ID TO SQL SERVER and get list of machine ID's that student can use
+            allowed = allowed_machines(id)
             if allowed != -1:
                 self.manager.current = 'machine' #switch screen
             self.id_label.text = 'ID: '
@@ -72,9 +87,10 @@ class MachineScreen(Screen):
         selectedMachines = []
         for id in self.ids:
             if self.ids[id].background_color == MachineScreen.status[1]:
-                selectedMachines.append(id)
-        print(selectedMachines)
-        print(IDScreen.curr_id)
+                selectedMachines.append(int(id))
+        # print(selectedMachines)
+        # print(IDScreen.curr_id)
+        log(IDScreen.curr_id, selectedMachines)
         self.manager.current = 'ID'
 
 class KeypadApp(App):
