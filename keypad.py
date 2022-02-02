@@ -62,11 +62,27 @@ class IDScreen(Screen):
 class MachineScreen(Screen):
     red = [1, 0, 0, 1]
     green = [0, 1, 0, 1]
+    black = [0, 0, 0, 0]
+    white = [1, 1, 1, 1]
     status = [red, green]
+
+    machines = ['Tormach', 'Bosslaser', 'Prusa MINI', 'Prusa i3', 'Afinia H+1', 'Bandsaw', 
+                'Sanding Belt', 'Drill Press', 'Heat Gun', 'Dremel', 'Soldering']
+
     def on_enter(self, *args):
+        allowedMachs = allowed_machines(IDScreen.curr_id)
+        # print(allowedMachs)
         for id in self.ids:
-            self.ids[id].background_color = MachineScreen.status[0]
+            if int(id) not in allowedMachs:
+                self.ids[id].background_color = MachineScreen.black
+                self.ids[id].color = MachineScreen.black
+            else:
+                self.ids[id].background_color = MachineScreen.status[0]
         return super().on_enter(*args)
+    
+    def toggleColor(self, machine, currColor):
+        if currColor in MachineScreen.status:
+            self.ids[str(MachineScreen.machines.index(machine) + 1)].background_color = MachineScreen.status[1 - MachineScreen.status.index(currColor)]
 
     def sendMachines(self):
         selectedMachines = []

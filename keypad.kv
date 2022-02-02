@@ -4,10 +4,16 @@
     id_label: id_label
     BoxLayout:
         orientation: 'horizontal'
-        Label:
-            id: id_label
-            text: 'ID: '
-            font_size: '25sp'
+        BoxLayout:
+            orientation: 'vertical'
+            Label:
+                id: id_label
+                text: 'ID: '
+                font_size: '25sp'
+            Label:
+                id: instructions
+                text: 'yote'
+                font_size: '20sp'
         GridLayout:
             cols: 3
             rows: 4
@@ -59,70 +65,92 @@
         padding: [40]
         Button:
             id: 1
-            text: 'Tormach'
+            name: 1
+            text: root.machines[self.name - 1]
+            color: root.white
             background_normal: ''
             background_color: root.red
-            on_release: self.background_color = root.status[1 - root.status.index(self.background_color)]
+            on_release: root.toggleColor(self.text, self.background_color)
         Button:
             id: 2
+            name: 2
             text: 'Bosslaser'
+            color: root.white
             background_normal: ''
             background_color: root.red
-            on_release: self.background_color = root.status[1 - root.status.index(self.background_color)]
+            on_release: root.toggleColor(self.text, self.background_color)
         Button:
             id: 3
-            text: 'Prusa MINI'
+            name: 3
+            text: root.machines[self.name - 1]
+            color: root.white
             background_normal: ''
             background_color: root.red
-            on_release: self.background_color = root.status[1 - root.status.index(self.background_color)]
+            on_release: root.toggleColor(self.text, self.background_color)
         Button:
             id: 4
-            text: 'Prusa i3'
+            name: 4
+            text: root.machines[self.name - 1]
+            color: root.white
             background_normal: ''
             background_color: root.red
-            on_release: self.background_color = root.status[1 - root.status.index(self.background_color)]
+            on_release: root.toggleColor(self.text, self.background_color)
         Button:
             id: 5
-            text: 'Afinia H+1'
+            name: 5
+            text: root.machines[self.name - 1]
+            color: root.white
             background_normal: ''
             background_color: root.red
-            on_release: self.background_color = root.status[1 - root.status.index(self.background_color)]
+            on_release: root.toggleColor(self.text, self.background_color)
         Button:
             id: 6
-            text: 'Bandsaw'
+            name: 6
+            text: root.machines[self.name - 1]
+            color: root.white
             background_normal: ''
             background_color: root.red
-            on_release: self.background_color = root.status[1 - root.status.index(self.background_color)]
+            on_release: root.toggleColor(self.text, self.background_color)
         Button:
             id: 7
-            text: 'Sanding Belt'
+            name: 7
+            text: root.machines[self.name - 1]
+            color: root.white
             background_normal: ''
             background_color: root.red
-            on_release: self.background_color = root.status[1 - root.status.index(self.background_color)]
+            on_release: root.toggleColor(self.text, self.background_color)
         Button:
             id: 8
-            text: 'Drill Press'
+            name: 8
+            text: root.machines[self.name - 1]
+            color: root.white
             background_normal: ''
             background_color: root.red
-            on_release: self.background_color = root.status[1 - root.status.index(self.background_color)]
+            on_release: root.toggleColor(self.text, self.background_color)
         Button:
             id: 9
-            text: 'Heat Gun'
+            name: 9
+            text: root.machines[self.name - 1]
+            color: root.white
             background_normal: ''
             background_color: root.red
-            on_release: self.background_color = root.status[1 - root.status.index(self.background_color)]
+            on_release: root.toggleColor(self.text, self.background_color)
         Button:
             id: 10
-            text: 'Dremel'
+            name: 10
+            text: root.machines[self.name - 1]
+            color: root.white
             background_normal: ''
             background_color: root.red
-            on_release: self.background_color = root.status[1 - root.status.index(self.background_color)]
+            on_release: root.toggleColor(self.text, self.background_color)
         Button:
             id: 11
-            text: 'Soldering'
+            name: 11
+            text: root.machines[self.name - 1]
+            color: root.white
             background_normal: ''
             background_color: root.red
-            on_release: self.background_color = root.status[1 - root.status.index(self.background_color)]
+            on_release: root.toggleColor(self.text, self.background_color)
         Button:
             text: 'Confirm'
             on_press: root.sendMachines()
