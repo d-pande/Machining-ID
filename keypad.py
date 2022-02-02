@@ -43,7 +43,7 @@ def log(id, machs): #logs a student entering the room given an id and list of ma
             timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
             cursor.execute("insert into log (sid, time_in) values ("+str(id)+", '"+timestamp+"')")
             connection.commit()
-            print(machs)
+            # print(machs)
             for m in machs:
                 cursor.execute("insert into log_machines (time_in, machine_id) values ('"+timestamp+"', "+str(m)+")")
                 connection.commit()
