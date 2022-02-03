@@ -95,9 +95,9 @@ class MachineScreen(Screen):
                 self.ids[id].background_color = MachineScreen.status[0]
         return super().on_enter(*args)
     
-    def toggleColor(self, machine, currColor):
+    def toggleColor(self, id, currColor):
         if currColor in MachineScreen.status:
-            self.ids[str(MachineScreen.machines.index(machine) + 1)].background_color = MachineScreen.status[1 - MachineScreen.status.index(currColor)]
+            self.ids[str(id)].background_color = MachineScreen.status[1 - MachineScreen.status.index(currColor)]
 
     def sendMachines(self):
         selectedMachines = []

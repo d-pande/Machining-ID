@@ -12,7 +12,7 @@
                 font_size: '25sp'
             Label:
                 id: instructions
-                text: 'yote'
+                text: 'Enter your Student ID'
                 font_size: '20sp'
         GridLayout:
             cols: 3
@@ -70,15 +70,15 @@
             color: root.white
             background_normal: ''
             background_color: root.red
-            on_release: root.toggleColor(self.text, self.background_color)
+            on_release: root.toggleColor(self.name, self.background_color)
         Button:
             id: 2
             name: 2
-            text: 'Bosslaser'
+            text: root.machines[self.name - 1]
             color: root.white
             background_normal: ''
             background_color: root.red
-            on_release: root.toggleColor(self.text, self.background_color)
+            on_release: root.toggleColor(self.name, self.background_color)
         Button:
             id: 3
             name: 3
@@ -86,7 +86,7 @@
             color: root.white
             background_normal: ''
             background_color: root.red
-            on_release: root.toggleColor(self.text, self.background_color)
+            on_release: root.toggleColor(self.name, self.background_color)
         Button:
             id: 4
             name: 4
@@ -94,7 +94,7 @@
             color: root.white
             background_normal: ''
             background_color: root.red
-            on_release: root.toggleColor(self.text, self.background_color)
+            on_release: root.toggleColor(self.name, self.background_color)
         Button:
             id: 5
             name: 5
@@ -102,7 +102,7 @@
             color: root.white
             background_normal: ''
             background_color: root.red
-            on_release: root.toggleColor(self.text, self.background_color)
+            on_release: root.toggleColor(self.name, self.background_color)
         Button:
             id: 6
             name: 6
@@ -110,7 +110,7 @@
             color: root.white
             background_normal: ''
             background_color: root.red
-            on_release: root.toggleColor(self.text, self.background_color)
+            on_release: root.toggleColor(self.name, self.background_color)
         Button:
             id: 7
             name: 7
@@ -118,7 +118,7 @@
             color: root.white
             background_normal: ''
             background_color: root.red
-            on_release: root.toggleColor(self.text, self.background_color)
+            on_release: root.toggleColor(self.name, self.background_color)
         Button:
             id: 8
             name: 8
@@ -126,7 +126,7 @@
             color: root.white
             background_normal: ''
             background_color: root.red
-            on_release: root.toggleColor(self.text, self.background_color)
+            on_release: root.toggleColor(self.name, self.background_color)
         Button:
             id: 9
             name: 9
@@ -134,7 +134,7 @@
             color: root.white
             background_normal: ''
             background_color: root.red
-            on_release: root.toggleColor(self.text, self.background_color)
+            on_release: root.toggleColor(self.name, self.background_color)
         Button:
             id: 10
             name: 10
@@ -142,7 +142,7 @@
             color: root.white
             background_normal: ''
             background_color: root.red
-            on_release: root.toggleColor(self.text, self.background_color)
+            on_release: root.toggleColor(self.name, self.background_color)
         Button:
             id: 11
             name: 11
@@ -150,7 +150,7 @@
             color: root.white
             background_normal: ''
             background_color: root.red
-            on_release: root.toggleColor(self.text, self.background_color)
+            on_release: root.toggleColor(self.name, self.background_color)
         Button:
             text: 'Confirm'
             on_press: root.sendMachines()
