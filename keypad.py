@@ -7,7 +7,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.lang import Builder
 from kivy.properties import ObjectProperty
 
-import credentials as creds #file with db credentials
+import pcreds as creds #file with db credentials
 import pymysql.cursors
 
 import time
@@ -47,13 +47,23 @@ def log(id, machs): #logs a student entering the room given an id and list of ma
             for m in machs:
                 cursor.execute("insert into log_machines (time_in, machine_id) values ('"+timestamp+"', "+str(m)+")")
                 connection.commit()
+
+def checkID(id): #need to pass in id as a string
+    connection.ping(True)
+    with connection:
+        with connection.cursor() as cursor:
+            cursor.execute("select exists(select * from students_machines where sid="+id+")")
+            r = cursor.fetchall()
+            return bool(r[0][0]) #returns true if student is in students_machines
             
 
 class IDScreen(Screen):
     id_label = ObjectProperty() #make id text accessible here
+    instructions = ObjectProperty()
     curr_id = ''
     def on_enter(self, *args):
         self.id_label.text = 'ID: '
+        self.instructions.text = 'Enter your Student ID'
         return super().on_enter(*args)
 
     def updateID(self, key):
@@ -65,11 +75,16 @@ class IDScreen(Screen):
     def sendID(self):
         if (len(self.id_label.text) == 9):
             id = self.id_label.text[4:]
-            allowed = allowed_machines(id)
-            if allowed != -1:
-                self.manager.current = 'machine' #switch screen
+            isStudent = checkID(id)
+            if (isStudent):
+                allowed = allowed_machines(id)
+                if allowed != -1:
+                    self.manager.current = 'machine' #switch screen
+                IDScreen.curr_id = id
+            else:
+                self.instructions.text = 'Invalid ID' #threading to reset message?
             self.id_label.text = 'ID: '
-            IDScreen.curr_id = id
+                
 
 
 
