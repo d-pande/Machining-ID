@@ -5,13 +5,14 @@ from kivy.uix.gridlayout import GridLayout
 from kivy.uix.label import Label
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.lang import Builder
-from kivy.properties import ObjectProperty
+from kivy.properties import ObjectProperty, StringProperty
 
-import pcreds as creds #file with db credentials
+import credentials as creds #file with db credentials
 import pymysql.cursors
 
 import time
 from datetime import datetime
+import threading
 
 # Connecting to the Database
 connection = pymysql.connect(host=creds.dbhost,
@@ -55,15 +56,14 @@ def checkID(id): #need to pass in id as a string
             cursor.execute("select exists(select * from students_machines where sid="+id+")")
             r = cursor.fetchall()
             return bool(r[0][0]) #returns true if student is in students_machines
-            
+                       
 
 class IDScreen(Screen):
     id_label = ObjectProperty() #make id text accessible here
-    instructions = ObjectProperty()
     curr_id = ''
     def on_enter(self, *args):
         self.id_label.text = 'ID: '
-        self.instructions.text = 'Enter your Student ID'
+        self.instructionsText = 'Enter your Student ID'
         return super().on_enter(*args)
 
     def updateID(self, key):
@@ -82,9 +82,14 @@ class IDScreen(Screen):
                     self.manager.current = 'machine' #switch screen
                 IDScreen.curr_id = id
             else:
-                self.instructions.text = 'Invalid ID' #threading to reset message?
+                self.ids.instructions.text = 'Invalid ID' 
+                t = threading.Timer(3.0, lambda: IDScreen.resetInstructions(self))
+                t.start()
             self.id_label.text = 'ID: '
-                
+    
+    def resetInstructions(self):
+        print("threading func")
+        self.ids.instructions.text = 'Enter your Student ID'
 
 
 
