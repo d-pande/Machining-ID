@@ -1,3 +1,4 @@
+from turtle import goto
 from kivy.app import App
 from kivy.uix.button import Button
 from kivy.uix.boxlayout import BoxLayout
@@ -78,9 +79,9 @@ class IDScreen(Screen):
             isStudent = checkID(id)
             if (isStudent):
                 allowed = allowed_machines(id)
+                IDScreen.curr_id = id
                 if allowed != -1:
                     self.manager.current = 'machine' #switch screen
-                IDScreen.curr_id = id
             else:
                 self.ids.instructions.text = 'Invalid ID' 
                 t = threading.Timer(3.0, lambda: IDScreen.resetInstructions(self))
@@ -104,16 +105,13 @@ class MachineScreen(Screen):
     machines = ['Tormach', 'Bosslaser', 'Prusa MINI', 'Prusa i3', 'Afinia H+1', 'Bandsaw', 
                 'Sanding Belt', 'Drill Press', 'Heat Gun', 'Dremel', 'Soldering']
 
-    def on_enter(self, *args):
+    def on_pre_enter(self, *args):
         allowedMachs = allowed_machines(IDScreen.curr_id)
-        # print(allowedMachs)
         for id in self.ids:
-            if int(id) not in allowedMachs:
-                self.ids[id].background_color = MachineScreen.black
-                self.ids[id].color = MachineScreen.black
-            else:
+            if int(id) in allowedMachs:
                 self.ids[id].background_color = MachineScreen.status[0]
-        return super().on_enter(*args)
+                self.ids[id].color = MachineScreen.white
+        return super().on_pre_enter(*args)
     
     def toggleColor(self, id, currColor):
         if currColor in MachineScreen.status:
@@ -124,16 +122,34 @@ class MachineScreen(Screen):
         for id in self.ids:
             if self.ids[id].background_color == MachineScreen.status[1]:
                 selectedMachines.append(int(id))
-        # print(selectedMachines)
-        # print(IDScreen.curr_id)
         log(IDScreen.curr_id, selectedMachines)
+        self.manager.current = 'confirmation'
+
+    def on_leave(self, *args):
+        for id in self.ids:
+            self.ids[id].background_color = MachineScreen.black
+            self.ids[id].color = MachineScreen.black
+        return super().on_leave(*args)
+
+class ConfirmationScreen(Screen):
+    # t = threading.Timer(5.0, lambda: gotoID(self))
+    def on_enter(self, *args):
+         self.t = threading.Timer(3.0, lambda: ConfirmationScreen.goToID(self))
+         self.t.start()
+    
+    def goToID(self):
         self.manager.current = 'ID'
+
+    def on_leave(self, *args):
+        self.t.cancel()
+        return super().on_leave(*args)
 
 class KeypadApp(App):
     def build(self):
         sm = ScreenManager()
-        sm.add_widget(IDScreen(name='ID'))
-        sm.add_widget(MachineScreen(name='machine'))
+        sm.add_widget(IDScreen(name = 'ID'))
+        sm.add_widget(MachineScreen(name = 'machine'))
+        sm.add_widget(ConfirmationScreen(name = 'confirmation'))
         return sm
 
 if __name__ == "__main__":
