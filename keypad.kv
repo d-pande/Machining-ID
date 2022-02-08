@@ -67,90 +67,102 @@
             id: 1
             name: 1
             text: root.machines[self.name - 1]
-            color: root.white
+            color: root.black
             background_normal: ''
-            background_color: root.red
+            background_color: root.black
             on_release: root.toggleColor(self.name, self.background_color)
         Button:
             id: 2
             name: 2
             text: root.machines[self.name - 1]
-            color: root.white
+            color: root.black
             background_normal: ''
-            background_color: root.red
+            background_color: root.black
             on_release: root.toggleColor(self.name, self.background_color)
         Button:
             id: 3
             name: 3
             text: root.machines[self.name - 1]
-            color: root.white
+            color: root.black
             background_normal: ''
-            background_color: root.red
+            background_color: root.black
             on_release: root.toggleColor(self.name, self.background_color)
         Button:
             id: 4
             name: 4
             text: root.machines[self.name - 1]
-            color: root.white
+            color: root.black
             background_normal: ''
-            background_color: root.red
+            background_color: root.black
             on_release: root.toggleColor(self.name, self.background_color)
         Button:
             id: 5
             name: 5
             text: root.machines[self.name - 1]
-            color: root.white
+            color: root.black
             background_normal: ''
-            background_color: root.red
+            background_color: root.black
             on_release: root.toggleColor(self.name, self.background_color)
         Button:
             id: 6
             name: 6
             text: root.machines[self.name - 1]
-            color: root.white
+            color: root.black
             background_normal: ''
-            background_color: root.red
+            background_color: root.black
             on_release: root.toggleColor(self.name, self.background_color)
         Button:
             id: 7
             name: 7
             text: root.machines[self.name - 1]
-            color: root.white
+            color: root.black
             background_normal: ''
-            background_color: root.red
+            background_color: root.black
             on_release: root.toggleColor(self.name, self.background_color)
         Button:
             id: 8
             name: 8
             text: root.machines[self.name - 1]
-            color: root.white
+            color: root.black
             background_normal: ''
-            background_color: root.red
+            background_color: root.black
             on_release: root.toggleColor(self.name, self.background_color)
         Button:
             id: 9
             name: 9
             text: root.machines[self.name - 1]
-            color: root.white
+            color: root.black
             background_normal: ''
-            background_color: root.red
+            background_color: root.black
             on_release: root.toggleColor(self.name, self.background_color)
         Button:
             id: 10
             name: 10
             text: root.machines[self.name - 1]
-            color: root.white
+            color: root.black
             background_normal: ''
-            background_color: root.red
+            background_color: root.black
             on_release: root.toggleColor(self.name, self.background_color)
         Button:
             id: 11
             name: 11
             text: root.machines[self.name - 1]
-            color: root.white
+            color: root.black
             background_normal: ''
-            background_color: root.red
+            background_color: root.black
             on_release: root.toggleColor(self.name, self.background_color)
         Button:
             text: 'Confirm'
             on_press: root.sendMachines()
+
+<ConfirmationScreen>:
+    BoxLayout:
+        orientation: 'vertical'
+        Button:
+            id: confirm
+            background_normal: ''
+            background_color: [0, 1, 0, 1]
+            text: 'ID Confirmed!\nPress to return to ID Screen'
+            font_size: '40sp'
+            halign: 'center'
+            on_press: root.manager.current = 'ID'
