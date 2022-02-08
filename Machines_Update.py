@@ -1,13 +1,18 @@
-import kivy
 from kivy.app import App
 from kivy.uix.button import Button
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.textinput import TextInput
 from kivy.uix.label import Label
-import mysql.connector
 
-millDatabase = mysql.connector.connect(host="192.168.86.211", user = "remote", passwd = "MILLpassword123", database = "id_project") 
-dbcursor = millDatabase.cursor()
+import credentials as creds #file with db credentials
+import pymysql.cursors
+
+connection = pymysql.connect(host=creds.dbhost,
+                             user=creds.dbuser,
+                             password=creds.dbpass,
+                             database=creds.dbname,
+                             charset='utf8mb4',
+                             cursorclass=pymysql.cursors.Cursor)
 
 class MyScreen(App):
     def build(self):
