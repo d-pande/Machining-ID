@@ -1,4 +1,3 @@
-from turtle import goto
 from kivy.app import App
 from kivy.uix.button import Button
 from kivy.uix.boxlayout import BoxLayout
@@ -45,7 +44,6 @@ def log(id, machs): #logs a student entering the room given an id and list of ma
             timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
             cursor.execute("insert into log (sid, time_in) values ("+str(id)+", '"+timestamp+"')")
             connection.commit()
-            # print(machs)
             for m in machs:
                 cursor.execute("insert into log_machines (time_in, machine_id) values ('"+timestamp+"', "+str(m)+")")
                 connection.commit()
@@ -89,7 +87,6 @@ class IDScreen(Screen):
             self.id_label.text = 'ID: '
     
     def resetInstructions(self):
-        print("threading func")
         self.ids.instructions.text = 'Enter your Student ID'
 
 
