@@ -55,6 +55,17 @@ def checkID(id): #need to pass in id as a string
             cursor.execute("select exists(select * from students_machines where sid="+id+")")
             r = cursor.fetchall()
             return bool(r[0][0]) #returns true if student is in students_machines
+
+def signOut(id): #signs out a student given their ID, only updates last entry in log
+    connection.ping(True)
+    with connection:
+        with connection.cursor() as cursor:
+            timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            cursor.execute("SELECT time_in FROM log l1 WHERE sid = "+str(id)+" and time_in = (SELECT MAX(time_in) FROM log l2 WHERE l1.sid = l2.sid) ORDER BY sid, time_in;")
+            result = cursor.fetchall()
+            r = result[0][0]
+            cursor.execute("update log set time_out = '"+timestamp+"' where sid = "+str(id)+" and time_in = '"+str(r)+"';")
+            connection.commit()
                        
 
 class IDScreen(Screen):
