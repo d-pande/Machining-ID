@@ -73,11 +73,11 @@ class IDScreen(Screen):
         elif (key == 'delete' and len(self.id_label.text) > 4): #don't delete 'ID: '
             self.id_label.text = self.id_label.text[:-1]
 
-    def sendID(self):
+    def signIn(self):
         if (len(self.id_label.text) == 9):
             id = self.id_label.text[4:]
             isStudent = checkID(id)
-            if (isStudent):
+            if checkID(id):
                 allowed = allowed_machines(id)
                 IDScreen.curr_id = id
                 if allowed != -1:
@@ -87,11 +87,24 @@ class IDScreen(Screen):
                 t = threading.Timer(3.0, lambda: IDScreen.resetInstructions(self))
                 t.start()
             self.id_label.text = 'ID: '
+
+    def signOut(self):
+        if (len(self.id_label.text) == 9):
+            id = self.id_label.text[4:]
+            if checkID(id):
+                # signOut(id)
+                self.ids.instructions.text = 'Signed Out!'
+                t = threading.Timer(3.0, lambda: IDScreen.resetInstructions(self))
+                t.start()
+            else:
+                self.ids.instructions.text = 'Invalid ID' 
+                t = threading.Timer(3.0, lambda: IDScreen.resetInstructions(self))
+                t.start()
+            self.id_label.text = 'ID: '
+                
     
     def resetInstructions(self):
-        print("threading func")
         self.ids.instructions.text = 'Enter your Student ID'
-
 
 
 
@@ -102,8 +115,8 @@ class MachineScreen(Screen):
     white = [1, 1, 1, 1]
     status = [red, green]
 
-    machines = ['Tormach', 'Bosslaser', 'Prusa MINI', 'Prusa i3', 'Afinia H+1', 'Bandsaw', 
-                'Sanding Belt', 'Drill Press', 'Heat Gun', 'Dremel', 'Soldering']
+    machines = ['CNC Machine', 'Laser Cutter', 'Bandsaw', 'Sanding Belt', 'Drill Press', 'Heat Gun', 
+                'Dremels / Rotary', 'Soldering']
 
     def on_pre_enter(self, *args):
         allowedMachs = allowed_machines(IDScreen.curr_id)
@@ -132,10 +145,10 @@ class MachineScreen(Screen):
         return super().on_leave(*args)
 
 class ConfirmationScreen(Screen):
-    # t = threading.Timer(5.0, lambda: gotoID(self))
     def on_enter(self, *args):
          self.t = threading.Timer(3.0, lambda: ConfirmationScreen.goToID(self))
          self.t.start()
+         return super().on_enter(*args)
     
     def goToID(self):
         self.manager.current = 'ID'

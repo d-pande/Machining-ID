@@ -4,6 +4,7 @@
     id_label: id_label
     BoxLayout:
         orientation: 'horizontal'
+        padding: [10]
         BoxLayout:
             orientation: 'vertical'
             Label:
@@ -14,6 +15,17 @@
                 id: instructions
                 text: 'Enter your Student ID'
                 font_size: '20sp'
+            GridLayout:
+                cols: 2
+                rows: 1
+                spacing: [5]
+                padding: [10]
+                Button:
+                    text: 'Sign In'
+                    on_press: root.signIn()
+                Button:
+                    text: 'Sign Out'
+                    on_press: 
         GridLayout:
             cols: 3
             rows: 4
@@ -47,113 +59,93 @@
                 text: '9'
                 on_press: root.updateID(self.text)
             Button:
-                text: 'delete'
-                on_press: root.updateID(self.text)
-            Button:
                 text: '0'
                 on_press: root.updateID(self.text)
             Button:
-                text: 'enter'
-                on_press: root.sendID()
+                text: ''
+                background_color: [0, 0, 0, 0]
+            Button:
+                text: 'delete'
+                on_press: root.updateID(self.text)
 
 
 <MachineScreen>:
-    GridLayout:
-        rows: 5
-        cols: 5
-        spacing: [20]
-        padding: [40]
-        Button:
-            id: 1
-            name: 1
-            text: root.machines[self.name - 1]
-            color: root.black
-            background_normal: ''
-            background_color: root.black
-            on_release: root.toggleColor(self.name, self.background_color)
-        Button:
-            id: 2
-            name: 2
-            text: root.machines[self.name - 1]
-            color: root.black
-            background_normal: ''
-            background_color: root.black
-            on_release: root.toggleColor(self.name, self.background_color)
-        Button:
-            id: 3
-            name: 3
-            text: root.machines[self.name - 1]
-            color: root.black
-            background_normal: ''
-            background_color: root.black
-            on_release: root.toggleColor(self.name, self.background_color)
-        Button:
-            id: 4
-            name: 4
-            text: root.machines[self.name - 1]
-            color: root.black
-            background_normal: ''
-            background_color: root.black
-            on_release: root.toggleColor(self.name, self.background_color)
-        Button:
-            id: 5
-            name: 5
-            text: root.machines[self.name - 1]
-            color: root.black
-            background_normal: ''
-            background_color: root.black
-            on_release: root.toggleColor(self.name, self.background_color)
-        Button:
-            id: 6
-            name: 6
-            text: root.machines[self.name - 1]
-            color: root.black
-            background_normal: ''
-            background_color: root.black
-            on_release: root.toggleColor(self.name, self.background_color)
-        Button:
-            id: 7
-            name: 7
-            text: root.machines[self.name - 1]
-            color: root.black
-            background_normal: ''
-            background_color: root.black
-            on_release: root.toggleColor(self.name, self.background_color)
-        Button:
-            id: 8
-            name: 8
-            text: root.machines[self.name - 1]
-            color: root.black
-            background_normal: ''
-            background_color: root.black
-            on_release: root.toggleColor(self.name, self.background_color)
-        Button:
-            id: 9
-            name: 9
-            text: root.machines[self.name - 1]
-            color: root.black
-            background_normal: ''
-            background_color: root.black
-            on_release: root.toggleColor(self.name, self.background_color)
-        Button:
-            id: 10
-            name: 10
-            text: root.machines[self.name - 1]
-            color: root.black
-            background_normal: ''
-            background_color: root.black
-            on_release: root.toggleColor(self.name, self.background_color)
-        Button:
-            id: 11
-            name: 11
-            text: root.machines[self.name - 1]
-            color: root.black
-            background_normal: ''
-            background_color: root.black
-            on_release: root.toggleColor(self.name, self.background_color)
-        Button:
-            text: 'Confirm'
-            on_press: root.sendMachines()
+    BoxLayout:
+        orientation: 'vertical'
+        Label:
+            text: 'Select machines you will use:'
+        GridLayout:
+            rows: 5
+            cols: 5
+            spacing: [20]
+            padding: [40]
+            Button:
+                id: 1
+                name: 1
+                text: root.machines[self.name - 1]
+                color: root.black
+                background_normal: ''
+                background_color: root.black
+                on_release: root.toggleColor(self.name, self.background_color)
+            Button:
+                id: 2
+                name: 2
+                text: root.machines[self.name - 1]
+                color: root.black
+                background_normal: ''
+                background_color: root.black
+                on_release: root.toggleColor(self.name, self.background_color)
+            Button:
+                id: 3
+                name: 3
+                text: root.machines[self.name - 1]
+                color: root.black
+                background_normal: ''
+                background_color: root.black
+                on_release: root.toggleColor(self.name, self.background_color)
+            Button:
+                id: 4
+                name: 4
+                text: root.machines[self.name - 1]
+                color: root.black
+                background_normal: ''
+                background_color: root.black
+                on_release: root.toggleColor(self.name, self.background_color)
+            Button:
+                id: 5
+                name: 5
+                text: root.machines[self.name - 1]
+                color: root.black
+                background_normal: ''
+                background_color: root.black
+                on_release: root.toggleColor(self.name, self.background_color)
+            Button:
+                id: 6
+                name: 6
+                text: root.machines[self.name - 1]
+                color: root.black
+                background_normal: ''
+                background_color: root.black
+                on_release: root.toggleColor(self.name, self.background_color)
+            Button:
+                id: 7
+                name: 7
+                text: root.machines[self.name - 1]
+                color: root.black
+                background_normal: ''
+                background_color: root.black
+                on_release: root.toggleColor(self.name, self.background_color)
+            Button:
+                id: 8
+                name: 8
+                text: root.machines[self.name - 1]
+                color: root.black
+                background_normal: ''
+                background_color: root.black
+                on_release: root.toggleColor(self.name, self.background_color)
+            Button:
+                text: 'Confirm'
+                on_release: root.sendMachines()
 
 <ConfirmationScreen>:
     BoxLayout:
@@ -162,7 +154,7 @@
             id: confirm
             background_normal: ''
             background_color: [0, 1, 0, 1]
-            text: 'ID Confirmed!\nPress to return to ID Screen'
+            text: 'ID Confirmed! You are signed in.\nPress to return to ID Screen'
             font_size: '40sp'
             halign: 'center'
             on_press: root.manager.current = 'ID'
