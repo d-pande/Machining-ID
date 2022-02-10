@@ -83,33 +83,28 @@ class IDScreen(Screen):
             self.id_label.text = self.id_label.text[:-1]
 
     def signIn(self):
-        if (len(self.id_label.text) == 9):
-            id = self.id_label.text[4:]
-            isStudent = checkID(id)
-            if checkID(id):
-                allowed = allowed_machines(id)
+        id = self.id_label.text[4:]
+        if (len(id) == 5) and checkID(id) and allowed_machines(id) != -1:
                 IDScreen.curr_id = id
-                if allowed != -1:
-                    self.manager.current = 'machine' #switch screen
-            else:
-                self.ids.instructions.text = 'Invalid ID' 
-                t = threading.Timer(3.0, lambda: IDScreen.resetInstructions(self))
-                t.start()
-            self.id_label.text = 'ID: '
+                self.manager.current = 'machine' #switch screen
+        else:
+            self.ids.instructions.text = 'Invalid ID' 
+            t = threading.Timer(3.0, lambda: IDScreen.resetInstructions(self))
+            t.start()
+        self.id_label.text = 'ID: '
 
     def signOut(self):
-        if (len(self.id_label.text) == 9):
-            id = self.id_label.text[4:]
-            if checkID(id):
-                # signOut(id)
-                self.ids.instructions.text = 'Signed Out!'
-                t = threading.Timer(3.0, lambda: IDScreen.resetInstructions(self))
-                t.start()
-            else:
-                self.ids.instructions.text = 'Invalid ID' 
-                t = threading.Timer(3.0, lambda: IDScreen.resetInstructions(self))
-                t.start()
-            self.id_label.text = 'ID: '
+        id = self.id_label.text[4:]
+        if (len(id) == 5 and checkID(id)):
+            signOut(id)
+            self.ids.instructions.text = 'Signed Out!'
+            t = threading.Timer(3.0, lambda: IDScreen.resetInstructions(self))
+            t.start()
+        else:
+            self.ids.instructions.text = 'Invalid ID' 
+            t = threading.Timer(3.0, lambda: IDScreen.resetInstructions(self))
+            t.start()
+        self.id_label.text = 'ID: '
                 
     
     def resetInstructions(self):
