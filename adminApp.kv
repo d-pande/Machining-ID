@@ -1,103 +1,104 @@
 #:kivy 2.0.0
 
 <AdminScreen>:
-    FloatLayout:
-        TextInput:
-            text: ''
-            size_hint: (0.3, 0.05)
-            background_color: (1, 0, 1, 0.5)
-            pos_hint: {'x': 0.05, 'y': 0.70}
-            font_size: '15sp'
-        Label:
-            id: id
-            text: 'Please Enter ID Number Below'
-            size_hint: (0.3, 0.05)
-            pos_hint: {'x': 0.05, 'y': 0.75}
-            font_size: '15sp'
-        Button:
-            text: 'Update'
-            size_hint: (0.15, 0.20)
-            background_color: (1, 0, 0, 1)
-            pos_hint: {'x': 0.80, 'y': 0.65}
-            font_size: '30sp'
-        Button:
-            text: 'Add'
-            size_hint: (0.15, 0.20)
-            max_lines: 2
-            background_color: (1, 0, 0, 1)
-            pos_hint: {'x': 0.6, 'y': 0.65}
-            font_size: '30sp'
-            on_press: root.addStudent()
-        Button:
-            id: 1
-            name: 1
-            text: '1'
-            size_hint: (0.25, 0.25)
-            background_color: (1, 0, 0, 1)
-            pos_hint: {'x': 0, 'y': 0}
-            font_size: '30sp'
-            on_press: root.toggleStatus(self.name, self.background_color)
-        Button:
-            id: 2
-            name: 2
-            text: '2'
-            size_hint: (0.25, 0.25)
-            background_color: (1, 0, 0, 1)
-            pos_hint: {'x': 0.25, 'y': 0}
-            font_size: '30sp'
-            on_press: root.toggleStatus(self.name, self.background_color)
-        Button:
-            id: 3
-            name: 3
-            text: '3'
-            size_hint: (0.25, 0.25)
-            background_color: (1, 0, 0, 1)
-            pos_hint: {'x': 0.5, 'y': 0}
-            font_size: '30sp'
-            on_press: root.toggleStatus(self.name, self.background_color)
-        Button:
-            id: 4
-            name: 4
-            text: '4'
-            size_hint: (0.25, 0.25)
-            background_color: (1, 0, 0, 1)
-            pos_hint: {'x': 0.75, 'y': 0}
-            font_size: '30sp'
-            on_press: root.toggleStatus(self.name, self.background_color)
-        Button:
-            id: 5
-            name: 5
-            text: '5'
-            size_hint: (0.25, 0.25)
-            background_color: (1, 0, 0, 1)
-            pos_hint: {'x': 0, 'y': 0.25}
-            font_size: '30sp'
-            on_press: root.toggleStatus(self.name, self.background_color)
-        Button:
-            id: 6
-            name: 6
-            text: '6'
-            size_hint: (0.25, 0.25)
-            background_color: (1, 0, 0, 1)
-            pos_hint: {'x': 0.25, 'y': 0.25}
-            font_size: '30sp'
-            on_press: root.toggleStatus(self.name, self.background_color)
-        Button:
-            id: 7
-            name: 7
-            text: '7'
-            size_hint: (0.25, 0.25)
-            background_color: (1, 0, 0, 1)
-            pos_hint: {'x': 0.5, 'y': 0.25}
-            font_size: '30sp'
-            on_press: root.toggleStatus(self.name, self.background_color)
-        Button:
-            id: 8
-            name: 8
-            text: '8'
-            size_hint: (0.25, 0.25)
-            background_color: (1, 0, 0, 1)
-            pos_hint: {'x': 0.75, 'y': 0.25}
-            font_size: '30sp'
-            on_press: root.toggleStatus(self.name, self.background_color)
+    BoxLayout:
+        orientation: 'vertical'
+        BoxLayout:
+            orientation: 'horizontal'
+            GridLayout:
+                rows: 2
+                cols: 1
+                spacing: [20]
+                padding: [40]
+                Label:
+                    id: id
+                    text: 'Please Enter ID Number Below'
+                    font_size: '20sp'
+                TextInput:
+                    text: ''
+                    background_color: (1, 0, 1, 0.5)
+                    font_size: '20sp'
+            GridLayout:
+                rows: 2
+                cols: 1
+                spacing: [20]
+                padding: [40]
+                Button:
+                    text: 'Add'
+                    background_color: root.red
+                    font_size: '30sp'
+                    on_press: root.addStudent()
+                Button:
+                    text: 'Update'
+                    background_color: root.red
+                    font_size: '30sp'
+        GridLayout:
+            rows: 2
+            cols: 4
+            spacing: [5]
+            padding: [10]
+            Button:
+                id: 1
+                name: 1
+                text: root.machines[self.name - 1]
+                background_normal: ''
+                background_color: root.red
+                font_size: '20sp'
+                on_press: root.toggleColor(self.name, self.background_color)
+            Button:
+                id: 2
+                name: 2
+                text: root.machines[self.name - 1]
+                background_normal: ''
+                background_color: root.red
+                font_size: '20sp'
+                on_press: root.toggleColor(self.name, self.background_color)
+            Button:
+                id: 3
+                name: 3
+                text: root.machines[self.name - 1]
+                background_normal: ''
+                background_color: root.red
+                font_size: '20sp'
+                on_press: root.toggleColor(self.name, self.background_color)
+            Button:
+                id: 4
+                name: 4
+                text: root.machines[self.name - 1]
+                background_normal: ''
+                background_color: root.red
+                font_size: '20sp'
+                on_press: root.toggleColor(self.name, self.background_color)
+            Button:
+                id: 5
+                name: 5
+                text: root.machines[self.name - 1]
+                background_normal: ''
+                background_color: root.red
+                font_size: '20sp'
+                on_press: root.toggleColor(self.name, self.background_color)
+            Button:
+                id: 6
+                name: 6
+                text: root.machines[self.name - 1]
+                background_normal: ''
+                background_color: root.red
+                font_size: '20sp'
+                on_press: root.toggleColor(self.name, self.background_color)
+            Button:
+                id: 7
+                name: 7
+                text: root.machines[self.name - 1]
+                background_normal: ''
+                background_color: root.red
+                font_size: '20sp'
+                on_press: root.toggleColor(self.name, self.background_color)
+            Button:
+                id: 8
+                name: 8
+                text: root.machines[self.name - 1]
+                background_normal: ''
+                background_color: root.red
+                font_size: '20sp'
+                on_press: root.toggleColor(self.name, self.background_color)
             

@@ -16,6 +16,13 @@ connection = pymysql.connect(host=creds.dbhost,
                              cursorclass=pymysql.cursors.Cursor)
 
 class AdminScreen(Screen):
+    red = [1, 0, 0, 1]
+    green = [0, 1, 0, 1]
+    status = [red, green]
+
+    machines = ['CNC Machine', 'Laser Cutter', 'Bandsaw', 'Sanding Belt', 'Drill Press', 'Heat Gun', 
+                'Dremels / Rotary', 'Soldering']
+
     def on_enter(self, *args):
         return super().on_enter(*args)
 
@@ -23,8 +30,8 @@ class AdminScreen(Screen):
         curr_id = self.ids.id.text
         pass
 
-    def toggleStatus(self, id, currColor):
-        pass
+    def toggleColor(self, id, currColor):
+        self.ids[str(id)].background_color = AdminScreen.status[1 - AdminScreen.status.index(currColor)]
 
 class LogScreen(Screen):
     def on_enter(self, *args):
