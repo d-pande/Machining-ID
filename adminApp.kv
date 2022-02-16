@@ -5,16 +5,31 @@
         orientation: 'vertical'
         BoxLayout:
             orientation: 'horizontal'
-            GridLayout:
-                rows: 2
-                cols: 1
-                spacing: [20]
+            BoxLayout:
+                orientation: 'vertical'
+                spacing: [20, 20]
                 padding: [40]
                 Label:
-                    id: id
-                    text: 'Please Enter ID Number Below'
+                    id: instructions1
+                    text: 'Please Enter\nStudent ID Below'
+                    halign: 'center'
                     font_size: '20sp'
                 TextInput:
+                    id: id_input
+                    text: ''
+                    background_color: (1, 0, 1, 0.5)
+                    font_size: '20sp'
+            BoxLayout:
+                orientation: 'vertical'
+                spacing: [20, 20]
+                padding: [40]
+                Label:
+                    id: instructions2
+                    text: 'Please Enter\nStudent Name Below'
+                    halign: 'center'
+                    font_size: '20sp'
+                TextInput:
+                    id: name_input
                     text: ''
                     background_color: (1, 0, 1, 0.5)
                     font_size: '20sp'

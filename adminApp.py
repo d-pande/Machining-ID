@@ -8,6 +8,8 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 import credentials as creds #file with db credentials
 import pymysql.cursors
 
+import threading
+
 connection = pymysql.connect(host=creds.dbhost,
                              user=creds.dbuser,
                              password=creds.dbpass,
@@ -27,11 +29,37 @@ class AdminScreen(Screen):
         return super().on_enter(*args)
 
     def addStudent(self):
-        curr_id = self.ids.id.text
-        pass
+        if not (len((self.ids.id_input.text)) == 5 and self.ids.id_input.text.isnumeric()) or not self.ids.name_input.text.isalpha():
+            if not len((self.ids.id_input.text)) == 5 or not self.ids.id_input.text.isnumeric():
+                self.ids.instructions1.text = "Invalid ID"
+                t = threading.Timer(1.5, lambda: AdminScreen.resetInstructions1(self))
+                t.start()
+            if not self.ids.name_input.text.isalpha():
+                self.ids.instructions2.text = "Invalid Name"
+                t = threading.Timer(1.5, lambda: AdminScreen.resetInstructions2(self))
+                t.start()
+            return
+        curr_id = int(self.ids.id_input.text)
+        curr_name = self.ids.name_input.text
+        currMachines = []
+        for id in self.ids:
+            if id.isnumeric():
+                currMachines.append(self.ids[id].background_color == AdminScreen.status[1])
+        connection.ping(True)
+        with connection:
+            with connection.cursor() as cursor:
+                cursor.callproc("add_new_student", [curr_id, curr_name, currMachines[0], currMachines[1], 
+                currMachines[2], currMachines[3], currMachines[4], currMachines[5], currMachines[6], currMachines[7]])
+                connection.commit()
 
     def toggleColor(self, id, currColor):
         self.ids[str(id)].background_color = AdminScreen.status[1 - AdminScreen.status.index(currColor)]
+    
+    def resetInstructions1(self):
+        self.ids.instructions1.text = "Please Enter\nStudent ID Below"
+    
+    def resetInstructions2(self):
+        self.ids.instructions2.text = "Please Enter\nStudent Name Below"
 
 class LogScreen(Screen):
     def on_enter(self, *args):
