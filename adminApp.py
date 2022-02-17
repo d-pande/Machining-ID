@@ -4,6 +4,10 @@ from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.textinput import TextInput
 from kivy.uix.label import Label
 from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.uix.recycleview.views import RecycleKVIDsDataViewBehavior
+from kivy.uix.boxlayout import BoxLayout
+from kivy.properties import NumericProperty, ReferenceListProperty, ObjectProperty
+
 
 import credentials as creds #file with db credentials
 import pymysql.cursors
@@ -27,6 +31,9 @@ class AdminScreen(Screen):
 
     def on_enter(self, *args):
         return super().on_enter(*args)
+
+    def showLog(self):
+        self.manager.current = 'log'
 
     def addStudent(self):
         if not (len((self.ids.id_input.text)) == 5 and self.ids.id_input.text.isnumeric()) or not self.ids.name_input.text.isalpha():
@@ -70,9 +77,60 @@ class AdminScreen(Screen):
     def resetInstructions2(self):
         self.ids.instructions2.text = "Please Enter\nStudent Name Below"
 
+class Row(RecycleKVIDsDataViewBehavior, BoxLayout):
+    def showMachines(self):
+        print("workkk")
+
 class LogScreen(Screen):
     def on_enter(self, *args):
         return super().on_enter(*args)
+    
+    def populate(self):
+        connection.ping(True)
+        table = []
+        dic = {}
+        with connection:
+                with connection.cursor() as cursor:
+                    cursor.execute("SELECT COUNT(*) FROM log;")
+                    r = cursor.fetchall()
+                    rows = r[0][0] #num of rows in the table
+                    cursor.execute("select * from log;")
+                    result = cursor.fetchall()
+                    cursor.execute("select * from students;")
+                    students = cursor.fetchall()
+                    for x in students:
+                        dic.update({x[0]:x[1]}) #int:string
+                    for x in result:
+                        table.append([dic.get(x[0]),str(x[1]),str(x[2])])
+        
+        self.rv.data = [
+            {'name.text': table[x][0],
+            'time_in.text': table[x][1],
+            'time_out.text': table[x][2],
+            'machs.text': 'Click for machines' #make button for machines
+            }
+            for x in range(rows)]
+        self.rv.data = sorted(self.rv.data, key=lambda x: x['time_in.text'], reverse=True)
+    
+
+    def sort(self):
+        self.rv.data = sorted(self.rv.data, key=lambda x: x['time_in.text'])
+
+    def clear(self):
+        self.rv.data = []
+
+    def insert(self, value):
+        self.rv.data.insert(0, {
+            'name.text': value or 'default value', 'value': 'unknown'})
+
+    def update(self, value):
+        if self.rv.data:
+            self.rv.data[0]['name.text'] = value or 'default new value'
+            self.rv.refresh_from_data()
+
+    def remove(self):
+        if self.rv.data:
+            self.rv.data.pop(0)
 
 class AdminApp(App):
     def build(self):
