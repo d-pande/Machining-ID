@@ -48,6 +48,15 @@ class AdminScreen(Screen):
         connection.ping(True)
         with connection:
             with connection.cursor() as cursor:
+                cursor.execute("select name from students where student_id = " + str(curr_id))
+                if len(cursor.fetchall()) == 1:
+                    self.ids.instructions1.text = "Student Already Exists"
+                    self.ids.instructions2.text = "Student Already Exists"
+                    t1 = threading.Timer(1.5, lambda: AdminScreen.resetInstructions1(self))
+                    t1.start()
+                    t2 = threading.Timer(1.5, lambda: AdminScreen.resetInstructions2(self))
+                    t2.start()
+                    return
                 cursor.callproc("add_new_student", [curr_id, curr_name, currMachines[0], currMachines[1], 
                 currMachines[2], currMachines[3], currMachines[4], currMachines[5], currMachines[6], currMachines[7]])
                 connection.commit()
