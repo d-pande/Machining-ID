@@ -32,10 +32,9 @@ class AdminScreen(Screen):
     def on_enter(self, *args):
         return super().on_enter(*args)
 
-<<<<<<< HEAD
     def showLog(self):
         self.manager.current = 'log'
-=======
+    
     def validateInput(self):
         validated = True
         if not(len(self.ids.id_input.text) == 5 and self.ids.id_input.text.isnumeric()):
@@ -51,7 +50,6 @@ class AdminScreen(Screen):
         return validated
         
 
->>>>>>> dev
 
     def addStudent(self):
         if not self.validateInput():
