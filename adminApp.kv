@@ -25,7 +25,7 @@
                 padding: [40]
                 Label:
                     id: instructions2
-                    text: 'Please Enter\nStudent Name Below'
+                    text: 'Please Enter\nStudent Name Below\nWhen Adding'
                     halign: 'center'
                     font_size: '20sp'
                 TextInput:
@@ -47,6 +47,7 @@
                     text: 'Update'
                     background_color: root.red
                     font_size: '30sp'
+                    on_press: root.updateStudent()
                 Button:
                     text: 'View Logs'
                     background_color: root.red
