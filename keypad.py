@@ -28,7 +28,7 @@ def allowed_machines(id): #returns list of machine IDs that a student can use
     with connection:
         with connection.cursor() as cursor:
             machs = []
-            cursor.execute("select mid from students_machines where sid="+id+" and can_use=1") 
+            cursor.execute("select mach_id from students_machines where sid="+id+" and can_use=1") 
             result = cursor.fetchall()
             if not result:
                 print("Invalid ID")
