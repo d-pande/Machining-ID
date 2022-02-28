@@ -11,7 +11,7 @@ from kivy.uix.popup import Popup
 
 
 
-import pcreds as creds #file with db credentials
+import credentials as creds #file with db credentials
 import pymysql.cursors
 
 import threading
