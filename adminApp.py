@@ -6,10 +6,12 @@ from kivy.uix.label import Label
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.recycleview.views import RecycleKVIDsDataViewBehavior
 from kivy.uix.boxlayout import BoxLayout
-from kivy.properties import NumericProperty, ReferenceListProperty, ObjectProperty
+from kivy.properties import NumericProperty, ReferenceListProperty, ObjectProperty, StringProperty
+from kivy.uix.popup import Popup
 
 
-import credentials as creds #file with db credentials
+
+import pcreds as creds #file with db credentials
 import pymysql.cursors
 
 import threading
@@ -20,6 +22,28 @@ connection = pymysql.connect(host=creds.dbhost,
                              database=creds.dbname,
                              charset='utf8mb4',
                              cursorclass=pymysql.cursors.Cursor)
+
+def machsUsed(time_in): #returns displayable string of machines used by time_in
+    connection.ping(True)
+    with connection:
+        with connection.cursor() as cursor:
+            cursor.execute("select machine_id from log_machines where time_in = \""+str(time_in)+"\"")
+            machines = cursor.fetchall()
+            ids = []
+            ret = ""
+            counter = 0
+            for m in machines:
+                ids.append(m[0])
+            cursor.execute("select * from machines")
+            machList = cursor.fetchall()
+            for n in machList:
+                for i in ids:
+                    if i in n:
+                        counter = counter+1
+                        ret = ret+str(counter)+". "+n[1]+"\n"
+            if not ret:
+                return "No Machines Logged"
+            return ret
 
 class AdminScreen(Screen):
     red = [1, 0, 0, 1]
@@ -125,9 +149,20 @@ class AdminScreen(Screen):
     def resetInstructions2(self):
         self.ids.instructions2.text = "Please Enter\nStudent Name Below"
 
+class MachinesUsed(Popup):
+    time = StringProperty()
+    def __init__(self, timeIn, **kwargs):
+        super(MachinesUsed, self).__init__(**kwargs)
+        self.time = timeIn
+    
+    def update_text(self): #popup text becomes whatever string is returned
+        return machsUsed(str(self.time))
+
 class Row(RecycleKVIDsDataViewBehavior, BoxLayout):
     def showMachines(self):
-        print("workkk")
+        timeIn = self.ids.time_in.text
+        p = MachinesUsed(timeIn)
+        p.open()
 
 class LogScreen(Screen):
     def on_enter(self, *args):

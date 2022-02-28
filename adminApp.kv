@@ -140,6 +140,15 @@
         id: machs
         on_release: root.showMachines()
 
+<MachinesUsed>:
+    size_hint: .5, .5
+    title: 'Machines Used:'
+    on_open:
+        machines_used_label.text = root.update_text()
+    Label:
+        id: machines_used_label
+        #on_press: root.dismiss()
+
 <LogScreen>:
     rv: rv
     BoxLayout:
