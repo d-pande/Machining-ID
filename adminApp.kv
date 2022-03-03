@@ -52,7 +52,9 @@
                     text: 'View Logs'
                     background_color: root.red
                     font_size: '30sp'
-                    on_press: root.showLog()
+                    on_press: 
+                        root.manager.transition.direction = 'left'
+                        root.manager.current = 'log'
         GridLayout:
             rows: 2
             cols: 4
@@ -138,6 +140,8 @@
         id: time_out
     Button:
         id: machs
+        size_hint_y: .88
+        pos_hint: {"center_x":.5,"center_y":.5}
         on_release: root.showMachines()
 
 <MachinesUsed>:
@@ -160,44 +164,43 @@
                 size: self.size
                 pos: self.pos
         GridLayout:
-            cols: 3
-            rows: 2
-            size_hint_y: None
-            height: dp(108)
-            padding: dp(8)
-            spacing: dp(16)
+            cols: 4
+            rows: 1
+            size_hint_y: .25
+            height: dp(108) #height of child widgets
+            padding: dp(10) #distance between layout and children
+            spacing: dp(16) #distance between children
             Button:
-                text: 'Populate list'
-                on_press: root.populate()
+                text: 'Return to Main Screen'
+                on_press:
+                    root.manager.transition.direction = 'right'
+                    root.manager.current = 'admin'
             Button:
-                text: 'Sort list'
-                on_press: root.sort()
+                text: 'Showing: Latest 100 Sign-Ins' #other options can be past week, past day, etc.
+        GridLayout:
+            cols: 4
+            rows: 1
+            size_hint_y: .1
+            ColumnButton:
+                id: student
+                font_name: "Arial.ttf" #different font so we can use pointy triangles
+                text: 'Students '
+                on_press: self.buttonPress([root.ids.TI, root.ids.TO], 'name', root)
+            ColumnButton:
+                id: TI
+                font_name: "Arial.ttf"
+                text: 'Time In \u25BC'
+                sortState: 'down'
+                on_press: self.buttonPress([root.ids.student, root.ids.TO], 'time_in', root)
+            ColumnButton:
+                id: TO
+                font_name: "Arial.ttf"
+                text: 'Time Out '
+                on_press: self.buttonPress([root.ids.student, root.ids.TI], 'time_out', root)
             Button:
-                text: 'Clear list'
-                on_press: root.clear()
-            BoxLayout:
-                spacing: dp(8)
-                Button:
-                    text: 'Insert new item'
-                    on_press: root.insert(new_item_input.text)
-                TextInput:
-                    id: new_item_input
-                    size_hint_x: 0.6
-                    hint_text: 'value'
-                    padding: dp(10), dp(10), 0, 0
-            BoxLayout:
-                spacing: dp(8)
-                Button:
-                    text: 'Update first item'
-                    on_press: root.update(update_item_input.text)
-                TextInput:
-                    id: update_item_input
-                    size_hint_x: 0.6
-                    hint_text: 'new value'
-                    padding: dp(10), dp(10), 0, 0
-            Button:
-                text: 'Remove first item'
-                on_press: root.remove()
+                font_name: "Arial.ttf"
+                text: 'Machines Used'
+                background_down: 'atlas://data/images/defaulttheme/button' #removes flash on click
 
         RecycleView:
             id: rv

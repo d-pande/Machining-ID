@@ -6,7 +6,7 @@ from kivy.uix.label import Label
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.recycleview.views import RecycleKVIDsDataViewBehavior
 from kivy.uix.boxlayout import BoxLayout
-from kivy.properties import NumericProperty, ReferenceListProperty, ObjectProperty, StringProperty
+from kivy.properties import NumericProperty, ReferenceListProperty, ObjectProperty, StringProperty, OptionProperty
 from kivy.uix.popup import Popup
 
 
@@ -55,9 +55,6 @@ class AdminScreen(Screen):
 
     def on_enter(self, *args):
         return super().on_enter(*args)
-
-    def showLog(self):
-        self.manager.current = 'log'
     
     def validateInput(self):
         validated = True
@@ -164,8 +161,42 @@ class Row(RecycleKVIDsDataViewBehavior, BoxLayout):
         p = MachinesUsed(timeIn)
         p.open()
 
+class ColumnButton(Button):
+    sortState = OptionProperty("none", options=["up", "down", "none"])
+
+    def buttonPress(self, otherButtons, thisButton, r):
+        for b in otherButtons:
+            if b.sortState != "none":
+                b.text = b.text[:-1]
+                b.sortState = "none"
+        
+        if self.sortState is 'none':
+            self.sortState = 'up'
+            self.text = self.text + "\u25B2"
+        elif self.sortState is 'up':
+            self.sortState = 'down'
+            self.text = self.text[:-1]
+            self.text = self.text + "\u25BC"
+        elif self.sortState is 'down':
+            self.sortState = 'none'
+            self.text = self.text[:-1]
+            # self.text = self.text + " "
+
+        def sortTODown(self): #NEED TO FIX: want time to show before "none" and still sort z-a;
+            pass
+
+        if self.sortState is 'up':
+            r.rv.data = sorted(r.rv.data, key=lambda x: x[thisButton+'.text'])
+        elif self.sortState is 'down':
+            r.rv.data = sorted(r.rv.data, key=lambda x: x[thisButton+'.text'], reverse=True)
+
+        print(self.sortState)
+
+
+
 class LogScreen(Screen):
     def on_enter(self, *args):
+        self.populate()
         return super().on_enter(*args)
     
     def populate(self):
@@ -176,7 +207,9 @@ class LogScreen(Screen):
                 with connection.cursor() as cursor:
                     cursor.execute("SELECT COUNT(*) FROM log;")
                     r = cursor.fetchall()
-                    rows = r[0][0] #num of rows in the table
+                    numRows = r[0][0] #num of rows in the table, modify to limit rows shown
+                    if (numRows>100):
+                        numRows = 100
                     cursor.execute("select * from log;")
                     result = cursor.fetchall()
                     cursor.execute("select * from students;")
@@ -185,35 +218,38 @@ class LogScreen(Screen):
                         dic.update({x[0]:x[1]}) #int:string
                     for x in result:
                         table.append([dic.get(x[0]),str(x[1]),str(x[2])])
-        
+                        
         self.rv.data = [
             {'name.text': table[x][0],
             'time_in.text': table[x][1],
             'time_out.text': table[x][2],
-            'machs.text': 'Click for machines' #make button for machines
+            'machs.text': 'Click for machines'
             }
-            for x in range(rows)]
-        self.rv.data = sorted(self.rv.data, key=lambda x: x['time_in.text'], reverse=True)
-    
+            for x in range(numRows)]
+        self.rv.data = sorted(self.rv.data, key=lambda x: x['time_in.text'], reverse=True) #sortTIDown
 
-    def sort(self):
+
+
+    def sortStudentUp(self): #up arrow, a-z, old to new
+        self.rv.data = sorted(self.rv.data, key=lambda x: x['name.text'])
+    def sortStudentDown(self): #down arrow, z-a, new to old
+        self.rv.data = sorted(self.rv.data, key=lambda x: x['name.text'], reverse=True)
+
+    def sortTIUp(self):
         self.rv.data = sorted(self.rv.data, key=lambda x: x['time_in.text'])
+    def sortTIDown(self):
+        self.rv.data = sorted(self.rv.data, key=lambda x: x['time_in.text'], reverse=True)
+
+    def sortTOUp(self): 
+        self.rv.data = sorted(self.rv.data, key=lambda x: x['time_out.text'])
+    def sortTODown(self): #NEED TO FIX: want time to show before "none" and still sort z-a
+        self.rv.data = sorted(self.rv.data, key=lambda x: x['time_out.text'], reverse=True)
+
+
 
     def clear(self):
         self.rv.data = []
 
-    def insert(self, value):
-        self.rv.data.insert(0, {
-            'name.text': value or 'default value', 'value': 'unknown'})
-
-    def update(self, value):
-        if self.rv.data:
-            self.rv.data[0]['name.text'] = value or 'default new value'
-            self.rv.refresh_from_data()
-
-    def remove(self):
-        if self.rv.data:
-            self.rv.data.pop(0)
 
 class AdminApp(App):
     def build(self):
