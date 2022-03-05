@@ -170,27 +170,31 @@ class ColumnButton(Button):
                 b.text = b.text[:-1]
                 b.sortState = "none"
         
-        if self.sortState is 'none':
+        if self.sortState == 'none':
             self.sortState = 'up'
             self.text = self.text + "\u25B2"
-        elif self.sortState is 'up':
+        elif self.sortState == 'up':
             self.sortState = 'down'
             self.text = self.text[:-1]
             self.text = self.text + "\u25BC"
-        elif self.sortState is 'down':
+        elif self.sortState == 'down':
             self.sortState = 'none'
             self.text = self.text[:-1]
-            # self.text = self.text + " "
-
-        def sortTODown(self): #NEED TO FIX: want time to show before "none" and still sort z-a;
-            pass
-
-        if self.sortState is 'up':
+           
+        if self.sortState == 'up':
             r.rv.data = sorted(r.rv.data, key=lambda x: x[thisButton+'.text'])
-        elif self.sortState is 'down':
-            r.rv.data = sorted(r.rv.data, key=lambda x: x[thisButton+'.text'], reverse=True)
-
-        print(self.sortState)
+        elif self.sortState == 'down':
+            if thisButton == 'time_out':
+                times = []
+                nones = []
+                for x in r.rv.data: 
+                    if x["time_out.text"][0].isdigit():  
+                        times.append(x)
+                    else:
+                        nones.append(x)
+                r.rv.data = sorted(times, key=lambda x: x['time_out.text'], reverse=True) + sorted(nones, key=lambda x: x['time_out.text'], reverse=True)            
+            else:
+                r.rv.data = sorted(r.rv.data, key=lambda x: x[thisButton+'.text'], reverse=True)
 
 
 
@@ -219,7 +223,7 @@ class LogScreen(Screen):
                     for x in result:
                         table.append([dic.get(x[0]),str(x[1]),str(x[2])])
                         
-        self.rv.data = [
+        self.rv.data = [ #rv.data stores a list of dictionaries, each item is a row from the database
             {'name.text': table[x][0],
             'time_in.text': table[x][1],
             'time_out.text': table[x][2],
@@ -227,25 +231,6 @@ class LogScreen(Screen):
             }
             for x in range(numRows)]
         self.rv.data = sorted(self.rv.data, key=lambda x: x['time_in.text'], reverse=True) #sortTIDown
-
-
-
-    def sortStudentUp(self): #up arrow, a-z, old to new
-        self.rv.data = sorted(self.rv.data, key=lambda x: x['name.text'])
-    def sortStudentDown(self): #down arrow, z-a, new to old
-        self.rv.data = sorted(self.rv.data, key=lambda x: x['name.text'], reverse=True)
-
-    def sortTIUp(self):
-        self.rv.data = sorted(self.rv.data, key=lambda x: x['time_in.text'])
-    def sortTIDown(self):
-        self.rv.data = sorted(self.rv.data, key=lambda x: x['time_in.text'], reverse=True)
-
-    def sortTOUp(self): 
-        self.rv.data = sorted(self.rv.data, key=lambda x: x['time_out.text'])
-    def sortTODown(self): #NEED TO FIX: want time to show before "none" and still sort z-a
-        self.rv.data = sorted(self.rv.data, key=lambda x: x['time_out.text'], reverse=True)
-
-
 
     def clear(self):
         self.rv.data = []
