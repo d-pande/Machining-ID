@@ -176,7 +176,9 @@
                     root.manager.transition.direction = 'right'
                     root.manager.current = 'admin'
             Button:
-                text: 'Showing: Latest 100 Sign-Ins' #other options can be past week, past day, etc.
+                id: limits
+                text: 'Showing: Latest 100 Sign-Ins'
+                on_release: root.switchLimit()
         GridLayout:
             cols: 4
             rows: 1

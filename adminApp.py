@@ -9,12 +9,11 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.properties import NumericProperty, ReferenceListProperty, ObjectProperty, StringProperty, OptionProperty
 from kivy.uix.popup import Popup
 
-
-
 import credentials as creds #file with db credentials
 import pymysql.cursors
 
 import threading
+import datetime
 
 connection = pymysql.connect(host=creds.dbhost,
                              user=creds.dbuser,
@@ -199,6 +198,9 @@ class ColumnButton(Button):
 
 
 class LogScreen(Screen):
+    limitState = OptionProperty("latest100", options=["latest100", "lastWeek", "lastDay"])
+    masterData = []
+
     def on_enter(self, *args):
         self.populate()
         return super().on_enter(*args)
@@ -211,9 +213,7 @@ class LogScreen(Screen):
                 with connection.cursor() as cursor:
                     cursor.execute("SELECT COUNT(*) FROM log;")
                     r = cursor.fetchall()
-                    numRows = r[0][0] #num of rows in the table, modify to limit rows shown
-                    if (numRows>100):
-                        numRows = 100
+                    numRows = r[0][0]
                     cursor.execute("select * from log;")
                     result = cursor.fetchall()
                     cursor.execute("select * from students;")
@@ -231,6 +231,45 @@ class LogScreen(Screen):
             }
             for x in range(numRows)]
         self.rv.data = sorted(self.rv.data, key=lambda x: x['time_in.text'], reverse=True) #sortTIDown
+        self.masterData = self.rv.data[:]
+        self.rv.data = self.masterData[0:100] #default is latest 100 rows shown
+
+    def switchLimit(self):
+        newList = []
+        currentDate = datetime.datetime.today()
+
+        if self.limitState == 'latest100':
+            self.limitState = 'lastWeek'
+            self.ids.limits.text = 'Showing: Last Week'
+            for row in self.masterData:
+                date = datetime.datetime.strptime(row['time_in.text'], '%Y-%m-%d %H:%M:%S')
+                daysDiff = (date-currentDate).days
+                if daysDiff>=-7:
+                    newList.append(row)
+        elif self.limitState == 'lastWeek':
+            self.limitState = 'lastDay'
+            self.ids.limits.text = 'Showing: Last Day'
+            for row in self.masterData:
+                date = datetime.datetime.strptime(row['time_in.text'], '%Y-%m-%d %H:%M:%S')
+                daysDiff = (date-currentDate).days
+                if daysDiff>=-1:
+                    newList.append(row)
+        elif self.limitState == 'lastDay':
+            self.limitState = 'latest100'
+            self.ids.limits.text = 'Showing: Latest 100 Sign-Ins'
+            newList = self.masterData[0:100]
+
+        self.rv.data = newList[:]
+
+        #resetting column labels
+        self.ids.student.text = 'Students '
+        self.ids.student.sortState = 'none'
+        self.ids.TI.text = 'Time In \u25BC'
+        self.ids.TI.sortState = 'down'
+        self.ids.TO.text = 'Time Out '
+        self.ids.TO.sortState = 'none'
+        
+
 
     def clear(self):
         self.rv.data = []
