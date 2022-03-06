@@ -79,8 +79,10 @@ class IDScreen(Screen):
     def updateID(self, key):
         if (key.isnumeric() and len(self.id_label.text) < 9): #add only 5 numbers
             self.id_label.text += key
-        elif (key == 'delete' and len(self.id_label.text) > 4): #don't delete 'ID: '
+        elif (key == 'Delete' and len(self.id_label.text) > 4): #don't delete 'ID: '
             self.id_label.text = self.id_label.text[:-1]
+        elif (key == 'Clear'):
+            self.id_label.text = 'ID: '
 
     def signIn(self):
         id = self.id_label.text[4:]
