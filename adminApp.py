@@ -33,13 +33,9 @@ def machsUsed(time_in): #returns displayable string of machines used by time_in
             counter = 0
             for m in machines:
                 ids.append(m[0])
-            cursor.execute("select * from machines")
-            machList = cursor.fetchall()
-            for n in machList:
-                for i in ids:
-                    if i in n:
-                        counter = counter+1
-                        ret = ret+str(counter)+". "+n[1]+"\n"
+            for i in ids:
+                counter = counter+1
+                ret = ret+str(counter)+". "+AdminScreen.machines[i]+"\n"
             if not ret:
                 return "No Machines Logged"
             return ret
@@ -50,7 +46,7 @@ class AdminScreen(Screen):
     status = [red, green]
 
     machines = ['CNC Machine', 'Laser Cutter', 'Bandsaw', 'Sanding Belt', 'Drill Press', 'Heat Gun', 
-                'Dremels / Rotary', 'Soldering']
+                'Dremels / Rotary', 'Soldering'] #master list of machine names
 
     def on_enter(self, *args):
         return super().on_enter(*args)
