@@ -40,32 +40,70 @@ def machsUsed(time_in): #returns displayable string of machines used by time_in
                 return "No Machines Logged"
             return ret
 
+def allowed_machines(id): #returns list of machine IDs that a student can use
+    connection.ping(True)
+    with connection:
+        with connection.cursor() as cursor:
+            machs = []
+            cursor.execute("select mach_id from students_machines where sid="+id+" and can_use=1") 
+            result = cursor.fetchall()
+            if not result:
+                print("Invalid ID")
+                return -1
+            for l in result:
+                machs.append(l[0]) #being stored as ints
+            return machs
+
 class AdminScreen(Screen):
     red = [1, 0, 0, 1]
     green = [0, 1, 0, 1]
+    white = [1, 1, 1, 1]
     status = [red, green]
 
     machines = ['CNC Machine', 'Laser Cutter', 'Bandsaw', 'Sanding Belt', 'Drill Press', 'Heat Gun', 
                 'Dremels / Rotary', 'Soldering'] #master list of machine names
 
     def on_enter(self, *args):
+        self.ids.id_input.text = ''
+        self.ids.name_input.text = ''
         return super().on_enter(*args)
     
     def validateInput(self):
         validated = True
         if not(len(self.ids.id_input.text) == 5 and self.ids.id_input.text.isnumeric()):
             self.ids.instructions1.text = "Invalid ID"
-            t1 = (threading.Timer(1.5, lambda: AdminScreen.resetInstructions1))
+            t1 = (threading.Timer(1.5, lambda: AdminScreen.resetInstructions1(self)))
             t1.start()
             validated = False
-        if not all(c.isalpha() or c.isspace() for c in self.ids.name_input.text):
+        if len(self.ids.name_input.text) == 0 or not all(c.isalpha() or c.isspace() for c in self.ids.name_input.text):
             self.ids.instructions2.text = "Invalid Name"
             t2 = threading.Timer(1.5, lambda: AdminScreen.resetInstructions2(self))
             t2.start()
             validated = False
         return validated
         
-
+    def viewAccess(self):
+        if not self.validateInput():
+            return
+        curr_id = int(self.ids.id_input.text)
+        curr_name = self.ids.name_input.text.lower()
+        connection.ping(True)
+        with connection:
+            with connection.cursor() as cursor:
+                cursor.execute("SELECT EXISTS(SELECT * FROM students WHERE student_id = "+str(curr_id)+" and name = \""+str(curr_name)+"\")")
+                if cursor.fetchall()[0][0] == 0:
+                    self.ids.instructions1.text = "Student Doesn't Exist"
+                    self.ids.instructions2.text = "Student Doesn't Exist"
+                    t1 = threading.Timer(1.5, lambda: AdminScreen.resetInstructions1(self))
+                    t1.start()
+                    t2 = threading.Timer(1.5, lambda: AdminScreen.resetInstructions2(self))
+                    t2.start()
+                    return
+        allowedMachs = allowed_machines(str(curr_id))
+        for id in self.ids:
+            if id.isnumeric() and int(id) in allowedMachs:
+                self.ids[id].background_color = AdminScreen.status[1]
+                self.ids[id].color = AdminScreen.white
 
     def addStudent(self):
         if not self.validateInput():

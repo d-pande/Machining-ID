@@ -21,11 +21,11 @@
                     font_size: '20sp'
             BoxLayout:
                 orientation: 'vertical'
-                spacing: [20, 20]
-                padding: [40]
+                spacing: [15, 15]
+                padding: [30]
                 Label:
                     id: instructions2
-                    text: 'Please Enter\nStudent Name Below\nWhen Adding'
+                    text: 'Please Enter\nStudent Name Below'
                     halign: 'center'
                     font_size: '20sp'
                 TextInput:
@@ -34,24 +34,29 @@
                     background_color: (1, 0, 1, 0.5)
                     font_size: '20sp'
             GridLayout:
-                rows: 3
+                rows: 4
                 cols: 1
-                spacing: [20]
-                padding: [40]
+                spacing: [15]
+                padding: [30]
                 Button:
                     text: 'Add'
                     background_color: root.red
-                    font_size: '30sp'
+                    font_size: '25sp'
                     on_press: root.addStudent()
                 Button:
                     text: 'Update'
                     background_color: root.red
-                    font_size: '30sp'
+                    font_size: '25sp'
                     on_press: root.updateStudent()
+                Button:
+                    text: 'View Machine Access'
+                    background_color: root.red
+                    font_size: '18sp'
+                    on_press: root.viewAccess();
                 Button:
                     text: 'View Logs'
                     background_color: root.red
-                    font_size: '30sp'
+                    font_size: '25sp'
                     on_press: 
                         root.manager.transition.direction = 'left'
                         root.manager.current = 'log'
