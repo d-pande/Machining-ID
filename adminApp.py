@@ -218,6 +218,11 @@ class LogScreen(Screen):
                         dic.update({x[0]:x[1]}) #int:string
                     for x in result:
                         table.append([dic.get(x[0]),str(x[1]),str(x[2])])
+
+                    #adding ids below name
+                    for x in range(numRows):
+                        table[x][0] = table[x][0] + "\n("+str(result[x][0])+")"
+
                         
         self.rv.data = [ #rv.data stores a list of dictionaries, each item is a row from the database
             {'name.text': table[x][0],
