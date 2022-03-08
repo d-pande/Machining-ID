@@ -132,8 +132,15 @@
         Rectangle:
             size: self.size
             pos: self.pos
-    Label:
-        id: name
+    BoxLayout:
+        orientation: 'vertical'
+        spacing: dp(-45)
+        padding: [0, -10, 0, -10]
+        Label:
+            id: name
+        Label:
+            id: sid
+            font_size: 14
     Label:
         id: time_in
     Label:
