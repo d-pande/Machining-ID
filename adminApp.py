@@ -255,12 +255,14 @@ class LogScreen(Screen):
                     for x in students:
                         dic.update({x[0]:x[1]}) #int:string
                     for x in result:
-                        table.append([dic.get(x[0]),str(x[1]),str(x[2])])
+                        table.append([dic.get(x[0]),('('+str(x[0])+')'),str(x[1]),str(x[2])])
+
                         
         self.rv.data = [ #rv.data stores a list of dictionaries, each item is a row from the database
             {'name.text': table[x][0],
-            'time_in.text': table[x][1],
-            'time_out.text': table[x][2],
+            'sid.text': table[x][1],
+            'time_in.text': table[x][2],
+            'time_out.text': table[x][3],
             'machs.text': 'Click for machines'
             }
             for x in range(numRows)]
