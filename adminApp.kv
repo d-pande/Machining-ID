@@ -34,26 +34,32 @@
                     background_color: (1, 0, 1, 0.5)
                     font_size: '20sp'
             GridLayout:
+                id: gridButtons
                 rows: 4
                 cols: 1
                 spacing: [15]
                 padding: [30]
+                on_size: root.scaleFont()
                 Button:
+                    id: add
                     text: 'Add'
                     background_color: root.red
                     font_size: '25sp'
                     on_press: root.addStudent()
                 Button:
+                    id: update
                     text: 'Update'
                     background_color: root.red
                     font_size: '25sp'
                     on_press: root.updateStudent()
                 Button:
+                    id: viewMachines
                     text: 'View Machine Access'
                     background_color: root.red
                     font_size: '18sp'
                     on_press: root.viewAccess();
                 Button:
+                    id: viewLogs
                     text: 'View Logs'
                     background_color: root.red
                     font_size: '25sp'

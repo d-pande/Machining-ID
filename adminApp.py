@@ -8,6 +8,7 @@ from kivy.uix.recycleview.views import RecycleKVIDsDataViewBehavior
 from kivy.uix.boxlayout import BoxLayout
 from kivy.properties import NumericProperty, ReferenceListProperty, ObjectProperty, StringProperty, OptionProperty
 from kivy.uix.popup import Popup
+from kivy.core.window import Window
 
 import credentials as creds #file with db credentials
 import pymysql.cursors
@@ -67,6 +68,13 @@ class AdminScreen(Screen):
         self.ids.id_input.text = ''
         self.ids.name_input.text = ''
         return super().on_enter(*args)
+
+    def scaleFont(self):
+        for id in self.ids:
+            if id in ["instructions1", "instructions2", "viewMachines"] or id.isnumeric():
+                self.ids[id].font_size = str(20 * (min(Window.width / 800, Window.height / 600))) + "sp"
+            elif id in ["add", "update", "viewLogs"]:
+                self.ids[id].font_size = str(25 * (min(Window.width / 800, Window.height / 600))) + "sp"
     
     def validateInput(self):
         validated = True
@@ -316,6 +324,8 @@ class AdminApp(App):
         sm = ScreenManager()
         sm.add_widget(AdminScreen(name = 'admin'))
         sm.add_widget(LogScreen(name = 'log'))
+        Window.minimum_width = 800
+        Window.minimum_height = 600
         return sm
        
 if __name__ == "__main__":
