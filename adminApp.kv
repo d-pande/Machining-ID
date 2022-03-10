@@ -52,7 +52,9 @@
                     text: 'View Machine Access'
                     background_color: root.red
                     font_size: '18sp'
-                    on_press: root.viewAccess();
+                    on_press:
+                        root.manager.transition.direction = 'left'
+                        root.manager.current = 'access'
                 Button:
                     text: 'View Logs'
                     background_color: root.red
@@ -222,6 +224,91 @@
             scroll_wheel_distance: dp(114)
             bar_width: dp(10)
             viewclass: 'Row'
+            RecycleBoxLayout:
+                default_size: None, dp(56)
+                default_size_hint: 1, None
+                size_hint_y: None
+                height: self.minimum_height
+                orientation: 'vertical'
+                spacing: dp(2)
+
+<AccessRow>:
+    canvas.before: 
+        Color:
+            rgba: 0.5, 0.5, 0.5, 1
+        Rectangle:
+            size: self.size
+            pos: self.pos
+    Label:
+        id: name
+    Label:
+        id: sid
+    Button:
+        id: machs
+        size_hint_y: .88
+        pos_hint: {"center_x":.5,"center_y":.5}
+        on_release: root.showMachines()
+
+<MachinesAllowed>:
+    size_hint: .5, .5
+    title: 'Machines Allowed:'
+    on_open:
+        machines_allowed_label.text = root.update_text()
+    Label:
+        id: machines_allowed_label
+
+<MachinesAccess>:
+    rv: rv
+    BoxLayout:
+        orientation: 'vertical'
+        canvas:
+            Color:
+                rgba: 0.3, 0.3, 0.3, 1
+            Rectangle:
+                size: self.size
+                pos: self.pos
+        GridLayout:
+            cols: 4
+            rows: 1
+            size_hint_y: .25
+            height: dp(108) #height of child widgets
+            padding: dp(10) #distance between layout and children
+            spacing: dp(16) #distance between children
+            Button:
+                text: 'Return to Main Screen'
+                on_press:
+                    root.manager.transition.direction = 'right'
+                    root.manager.current = 'admin'
+            Button:
+                id: search
+                text: 'Search Button :(('
+        GridLayout:
+            cols: 4
+            rows: 1
+            size_hint_y: .1
+            ColumnButton:
+                id: student
+                font_name: "Arial.ttf" #different font so we can use pointy triangles
+                text: 'Students \u25B2'
+                sortState: 'up'
+                on_press: self.buttonPress([root.ids.sid], 'name', root)
+            ColumnButton:
+                id: sid
+                font_name: "Arial.ttf"
+                text: 'ID '
+                sortState: 'none'
+                on_press: self.buttonPress([root.ids.student], 'sid', root)
+            Button:
+                font_name: "Arial.ttf"
+                text: 'Machines Allowed'
+                background_down: 'atlas://data/images/defaulttheme/button' #removes flash on click
+
+        RecycleView:
+            id: rv
+            scroll_type: ['bars', 'content']
+            scroll_wheel_distance: dp(114)
+            bar_width: dp(10)
+            viewclass: 'AccessRow'
             RecycleBoxLayout:
                 default_size: None, dp(56)
                 default_size_hint: 1, None

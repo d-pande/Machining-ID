@@ -6,7 +6,7 @@ from kivy.uix.label import Label
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.recycleview.views import RecycleKVIDsDataViewBehavior
 from kivy.uix.boxlayout import BoxLayout
-from kivy.properties import NumericProperty, ReferenceListProperty, ObjectProperty, StringProperty, OptionProperty
+from kivy.properties import NumericProperty, ReferenceListProperty, ObjectProperty, StringProperty, OptionProperty, ListProperty
 from kivy.uix.popup import Popup
 
 import credentials as creds #file with db credentials
@@ -45,7 +45,7 @@ def allowed_machines(id): #returns list of machine IDs that a student can use
     with connection:
         with connection.cursor() as cursor:
             machs = []
-            cursor.execute("select mach_id from students_machines where sid="+id+" and can_use=1") 
+            cursor.execute("select mach_id from students_machines where sid="+str(id)+" and can_use=1") 
             result = cursor.fetchall()
             if not result:
                 print("Invalid ID")
@@ -310,12 +310,66 @@ class LogScreen(Screen):
     def clear(self):
         self.rv.data = []
 
+class MachinesAllowed(Popup):
+    sid = NumericProperty()
+    def __init__(self, studentID, **kwargs):
+        super(MachinesAllowed, self).__init__(**kwargs)
+        self.sid = studentID
+    
+    def update_text(self): #popup text becomes whatever string is returned
+        allowedMachines = allowed_machines(self.sid)
+        if allowedMachines != -1:
+            ret = ""
+            counter = 0
+            for m in allowedMachines:
+                counter = counter+1
+                ret = ret+str(counter)+". "+AdminScreen.machines[m]+"\n"
+            if not ret:
+                return "No Machines Allowed"
+            return ret
+        else:
+            return "No Machines Allowed"
+
+class AccessRow(RecycleKVIDsDataViewBehavior, BoxLayout):
+    def showMachines(self):
+        studentID = self.ids.sid.text
+        p = MachinesAllowed(studentID)
+        p.open()
+
+class MachinesAccess(Screen):
+    def on_enter(self, *args):
+        self.populate()
+        return super().on_enter(*args)
+    
+    def populate(self):
+        connection.ping(True)
+        table = []
+        with connection:
+                with connection.cursor() as cursor:
+                    cursor.execute("SELECT COUNT(*) FROM students;")
+                    r = cursor.fetchall()
+                    numRows = r[0][0]
+                    cursor.execute("select * from students;")
+                    students = cursor.fetchall()
+                    for x in students:
+                        table.append([str(x[1]),str(x[0])])
+                        
+        self.rv.data = [ #rv.data stores a list of dictionaries, each item is a row from the database
+            {'name.text': table[x][0],
+            'sid.text': table[x][1],
+            'machs.text': 'Click for machines'
+            }
+            for x in range(numRows)]
+        self.rv.data = sorted(self.rv.data, key=lambda x: x['name.text'])
+      
+
 
 class AdminApp(App):
     def build(self):
         sm = ScreenManager()
         sm.add_widget(AdminScreen(name = 'admin'))
         sm.add_widget(LogScreen(name = 'log'))
+        sm.add_widget(MachinesAccess(name = 'access'))
         return sm
        
 if __name__ == "__main__":
