@@ -37,7 +37,7 @@ def machsUsed(time_in): #returns displayable string of machines used by time_in
                 ids.append(m[0])
             for i in ids:
                 counter = counter+1
-                ret = ret+str(counter)+". "+AdminScreen.machines[i]+"\n"
+                ret = ret+str(counter)+". "+AdminScreen.machines[(i-1)]+"\n"
             if not ret:
                 return "No Machines Logged"
             return ret
