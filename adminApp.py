@@ -50,7 +50,7 @@ def allowed_machines(id): #returns list of machine IDs that a student can use
             cursor.execute("select mach_id from students_machines where sid="+str(id)+" and can_use=1") 
             result = cursor.fetchall()
             if not result:
-                print("Invalid ID")
+                # print("Invalid ID")
                 return -1
             for l in result:
                 machs.append(l[0]) #being stored as ints
@@ -318,7 +318,6 @@ class MachinesAccess(Screen):
         return super().on_enter(*args)
     
     def populate(self):
-        print('populated')
         connection.ping(True)
         table = []
         with connection:
@@ -379,7 +378,7 @@ class SearchBar(TextInput):
     def on_text(self, instance, value):
         display_data = []
         for row in self.parent.parent.parent.masterData:
-            if self.text.lower() in row['name.text'].lower():
+            if self.text.lower() in row['name.text'].lower() or self.text.lower() in row['sid.text']:
                 display_data.append(row)
         if len(self.text) == 0:
             display_data = self.parent.parent.parent.masterData
