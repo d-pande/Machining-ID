@@ -290,22 +290,20 @@
             cols: 4
             rows: 1
             size_hint_y: .1
-            ColumnButton:
+            Button:
                 id: student
-                font_name: "Arial.ttf" #different font so we can use pointy triangles
-                text: 'Students \u25B2'
-                sortState: 'up'
-                on_press: self.buttonPress([root.ids.sid], 'name', root)
-            ColumnButton:
+                font_name: "Arial.ttf"
+                text: 'Students'
+                background_down: 'atlas://data/images/defaulttheme/button' 
+            Button:
                 id: sid
                 font_name: "Arial.ttf"
-                text: 'ID '
-                sortState: 'none'
-                on_press: self.buttonPress([root.ids.student], 'sid', root)
+                text: 'ID'
+                background_down: 'atlas://data/images/defaulttheme/button' 
             Button:
                 font_name: "Arial.ttf"
                 text: 'Machines Allowed'
-                background_down: 'atlas://data/images/defaulttheme/button' #removes flash on click
+                background_down: 'atlas://data/images/defaulttheme/button' 
 
         RecycleView:
             id: rv
