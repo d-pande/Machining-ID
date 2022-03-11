@@ -249,6 +249,10 @@
         pos_hint: {"center_x":.5,"center_y":.5}
         on_release: root.showMachines()
 
+<SearchBar>:
+    readonly: False
+    multiline: False
+
 <MachinesAllowed>:
     size_hint: .5, .5
     title: 'Machines Allowed:'
@@ -279,9 +283,9 @@
                 on_press:
                     root.manager.transition.direction = 'right'
                     root.manager.current = 'admin'
-            Button:
+            SearchBar:
                 id: search
-                text: 'Search Button :(('
+                hint_text:'Enter here'
         GridLayout:
             cols: 4
             rows: 1

@@ -8,12 +8,12 @@ from kivy.uix.recycleview.views import RecycleKVIDsDataViewBehavior
 from kivy.uix.boxlayout import BoxLayout
 from kivy.properties import NumericProperty, ReferenceListProperty, ObjectProperty, StringProperty, OptionProperty, ListProperty
 from kivy.uix.popup import Popup
-
-import credentials as creds #file with db credentials
 import pymysql.cursors
-
 import threading
 import datetime
+
+import credentials as creds #file with db credentials
+
 
 connection = pymysql.connect(host=creds.dbhost,
                              user=creds.dbuser,
@@ -21,6 +21,7 @@ connection = pymysql.connect(host=creds.dbhost,
                              database=creds.dbname,
                              charset='utf8mb4',
                              cursorclass=pymysql.cursors.Cursor)
+
 
 def machsUsed(time_in): #returns displayable string of machines used by time_in
     connection.ping(True)
@@ -40,6 +41,7 @@ def machsUsed(time_in): #returns displayable string of machines used by time_in
                 return "No Machines Logged"
             return ret
 
+
 def allowed_machines(id): #returns list of machine IDs that a student can use
     connection.ping(True)
     with connection:
@@ -53,6 +55,7 @@ def allowed_machines(id): #returns list of machine IDs that a student can use
             for l in result:
                 machs.append(l[0]) #being stored as ints
             return machs
+
 
 class AdminScreen(Screen):
     red = [1, 0, 0, 1]
@@ -179,57 +182,6 @@ class AdminScreen(Screen):
     def resetInstructions2(self):
         self.ids.instructions2.text = "Please Enter\nStudent Name Below"
 
-class MachinesUsed(Popup):
-    time = StringProperty()
-    def __init__(self, timeIn, **kwargs):
-        super(MachinesUsed, self).__init__(**kwargs)
-        self.time = timeIn
-    
-    def update_text(self): #popup text becomes whatever string is returned
-        return machsUsed(str(self.time))
-
-class Row(RecycleKVIDsDataViewBehavior, BoxLayout):
-    def showMachines(self):
-        timeIn = self.ids.time_in.text
-        p = MachinesUsed(timeIn)
-        p.open()
-
-class ColumnButton(Button):
-    sortState = OptionProperty("none", options=["up", "down", "none"])
-
-    def buttonPress(self, otherButtons, thisButton, r):
-        for b in otherButtons:
-            if b.sortState != "none":
-                b.text = b.text[:-1]
-                b.sortState = "none"
-        
-        if self.sortState == 'none':
-            self.sortState = 'up'
-            self.text = self.text + "\u25B2"
-        elif self.sortState == 'up':
-            self.sortState = 'down'
-            self.text = self.text[:-1]
-            self.text = self.text + "\u25BC"
-        elif self.sortState == 'down':
-            self.sortState = 'none'
-            self.text = self.text[:-1]
-           
-        if self.sortState == 'up':
-            r.rv.data = sorted(r.rv.data, key=lambda x: x[thisButton+'.text'])
-        elif self.sortState == 'down':
-            if thisButton == 'time_out':
-                times = []
-                nones = []
-                for x in r.rv.data: 
-                    if x["time_out.text"][0].isdigit():  
-                        times.append(x)
-                    else:
-                        nones.append(x)
-                r.rv.data = sorted(times, key=lambda x: x['time_out.text'], reverse=True) + sorted(nones, key=lambda x: x['time_out.text'], reverse=True)            
-            else:
-                r.rv.data = sorted(r.rv.data, key=lambda x: x[thisButton+'.text'], reverse=True)
-
-
 
 class LogScreen(Screen):
     limitState = OptionProperty("latest100", options=["latest100", "lastWeek", "lastDay"])
@@ -256,7 +208,6 @@ class LogScreen(Screen):
                         dic.update({x[0]:x[1]}) #int:string
                     for x in result:
                         table.append([dic.get(x[0]),('('+str(x[0])+')'),str(x[1]),str(x[2])])
-
                         
         self.rv.data = [ #rv.data stores a list of dictionaries, each item is a row from the database
             {'name.text': table[x][0],
@@ -304,11 +255,91 @@ class LogScreen(Screen):
         self.ids.TI.sortState = 'down'
         self.ids.TO.text = 'Time Out '
         self.ids.TO.sortState = 'none'
+
+      
+class MachinesUsed(Popup):
+    time = StringProperty()
+    def __init__(self, timeIn, **kwargs):
+        super(MachinesUsed, self).__init__(**kwargs)
+        self.time = timeIn
+    
+    def update_text(self): #popup text becomes whatever string is returned
+        return machsUsed(str(self.time))
+
+
+class Row(RecycleKVIDsDataViewBehavior, BoxLayout):
+    def showMachines(self):
+        timeIn = self.ids.time_in.text
+        p = MachinesUsed(timeIn)
+        p.open()
+
+
+class ColumnButton(Button):
+    sortState = OptionProperty("none", options=["up", "down", "none"])
+
+    def buttonPress(self, otherButtons, thisButton, r):
+        for b in otherButtons:
+            if b.sortState != "none":
+                b.text = b.text[:-1]
+                b.sortState = "none"
         
+        if self.sortState == 'none':
+            self.sortState = 'up'
+            self.text = self.text + "\u25B2"
+        elif self.sortState == 'up':
+            self.sortState = 'down'
+            self.text = self.text[:-1]
+            self.text = self.text + "\u25BC"
+        elif self.sortState == 'down':
+            self.sortState = 'none'
+            self.text = self.text[:-1]
+           
+        if self.sortState == 'up':
+            r.rv.data = sorted(r.rv.data, key=lambda x: x[thisButton+'.text'])
+        elif self.sortState == 'down':
+            if thisButton == 'time_out':
+                times = []
+                nones = []
+                for x in r.rv.data: 
+                    if x["time_out.text"][0].isdigit():  
+                        times.append(x)
+                    else:
+                        nones.append(x)
+                r.rv.data = sorted(times, key=lambda x: x['time_out.text'], reverse=True) + sorted(nones, key=lambda x: x['time_out.text'], reverse=True)            
+            else:
+                r.rv.data = sorted(r.rv.data, key=lambda x: x[thisButton+'.text'], reverse=True)
 
 
-    def clear(self):
+class MachinesAccess(Screen):
+    masterData = []
+
+    def on_enter(self, *args):
+        self.populate()
+        return super().on_enter(*args)
+    
+    def populate(self):
+        print('populated')
+        connection.ping(True)
+        table = []
+        with connection:
+                with connection.cursor() as cursor:
+                    cursor.execute("SELECT COUNT(*) FROM students;")
+                    r = cursor.fetchall()
+                    numRows = r[0][0]
+                    cursor.execute("select * from students;")
+                    students = cursor.fetchall()
+                    for x in students:
+                        table.append([str(x[1]),str(x[0])])
         self.rv.data = []
+        self.rv.data = [ #rv.data stores a list of dictionaries, each item is a row from the database
+            {'name.text': table[x][0],
+            'sid.text': table[x][1],
+            'machs.text': 'Click for machines'
+            }
+            for x in range(numRows)]
+        self.rv.data = sorted(self.rv.data, key=lambda x: x['name.text'])
+        self.masterData = self.rv.data[:]
+
 
 class MachinesAllowed(Popup):
     sid = NumericProperty()
@@ -330,39 +361,30 @@ class MachinesAllowed(Popup):
         else:
             return "No Machines Allowed"
 
+
 class AccessRow(RecycleKVIDsDataViewBehavior, BoxLayout):
     def showMachines(self):
         studentID = self.ids.sid.text
         p = MachinesAllowed(studentID)
         p.open()
 
-class MachinesAccess(Screen):
-    def on_enter(self, *args):
-        self.populate()
-        return super().on_enter(*args)
-    
-    def populate(self):
-        connection.ping(True)
-        table = []
-        with connection:
-                with connection.cursor() as cursor:
-                    cursor.execute("SELECT COUNT(*) FROM students;")
-                    r = cursor.fetchall()
-                    numRows = r[0][0]
-                    cursor.execute("select * from students;")
-                    students = cursor.fetchall()
-                    for x in students:
-                        table.append([str(x[1]),str(x[0])])
-                        
-        self.rv.data = [ #rv.data stores a list of dictionaries, each item is a row from the database
-            {'name.text': table[x][0],
-            'sid.text': table[x][1],
-            'machs.text': 'Click for machines'
-            }
-            for x in range(numRows)]
-        self.rv.data = sorted(self.rv.data, key=lambda x: x['name.text'])
-      
 
+class SearchBar(TextInput):
+    word_list = ListProperty()
+    mData = ListProperty()
+
+    def __init__(self, **kwargs):
+        super(SearchBar, self).__init__(**kwargs)
+
+    def on_text(self, instance, value):
+        display_data = []
+        for row in self.parent.parent.parent.masterData:
+            if self.text.lower() in row['name.text'].lower():
+                display_data.append(row)
+        if len(self.text) == 0:
+            display_data = self.parent.parent.parent.masterData
+        self.parent.parent.parent.ids.rv.data = display_data
+      
 
 class AdminApp(App):
     def build(self):
