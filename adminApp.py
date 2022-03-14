@@ -37,7 +37,7 @@ def machsUsed(time_in): #returns displayable string of machines used by time_in
                 ids.append(m[0])
             for i in ids:
                 counter = counter+1
-                ret = ret+str(counter)+". "+AdminScreen.machines[(i-1)]+"\n"
+                ret = ret+str(counter)+". "+AdminScreen.machines[i-1]+"\n"
             if not ret:
                 return "No Machines Logged"
             return ret
@@ -361,7 +361,7 @@ class MachinesAllowed(Popup):
             counter = 0
             for m in allowedMachines:
                 counter = counter+1
-                ret = ret+str(counter)+". "+AdminScreen.machines[m]+"\n"
+                ret = ret+str(counter)+". "+AdminScreen.machines[m-1]+"\n"
             if not ret:
                 return "No Machines Allowed"
             return ret
