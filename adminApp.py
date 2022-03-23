@@ -12,6 +12,7 @@ from kivy.core.window import Window
 import pymysql.cursors
 import threading
 import datetime
+import time
 
 import credentials as creds #file with db credentials
 
@@ -196,38 +197,43 @@ class LogScreen(Screen):
     masterData = []
 
     def on_enter(self, *args):
-        self.populate()
+        # self.populate()
+        self.t = threading.Thread(target = self.populate, daemon=True)
+        self.t.start()
         return super().on_enter(*args)
     
     def populate(self):
-        connection.ping(True)
-        table = []
-        dic = {}
-        with connection:
-                with connection.cursor() as cursor:
-                    cursor.execute("SELECT COUNT(*) FROM log;")
-                    r = cursor.fetchall()
-                    numRows = r[0][0]
-                    cursor.execute("select * from log;")
-                    result = cursor.fetchall()
-                    cursor.execute("select * from students;")
-                    students = cursor.fetchall()
-                    for x in students:
-                        dic.update({x[0]:x[1]}) #int:string
-                    for x in result:
-                        table.append([dic.get(x[0]),('('+str(x[0])+')'),str(x[1]),str(x[2])])
-                        
-        self.rv.data = [ #rv.data stores a list of dictionaries, each item is a row from the database
-            {'name.text': table[x][0],
-            'sid.text': table[x][1],
-            'time_in.text': table[x][2],
-            'time_out.text': table[x][3],
-            'machs.text': 'Click for machines'
-            }
-            for x in range(numRows)]
-        self.rv.data = sorted(self.rv.data, key=lambda x: x['time_in.text'], reverse=True) #sortTIDown
-        self.masterData = self.rv.data[:]
-        self.rv.data = self.masterData[0:100] #default is latest 100 rows shown
+        while (True):
+            connection.ping(True)
+            table = []
+            dic = {}
+            self.rv.data = []
+            with connection:
+                    with connection.cursor() as cursor:
+                        cursor.execute("SELECT COUNT(*) FROM log;")
+                        r = cursor.fetchall()
+                        numRows = r[0][0]
+                        cursor.execute("select * from log;")
+                        result = cursor.fetchall()
+                        cursor.execute("select * from students;")
+                        students = cursor.fetchall()
+                        for x in students:
+                            dic.update({x[0]:x[1]}) #int:string
+                        for x in result:
+                            table.append([dic.get(x[0]),('('+str(x[0])+')'),str(x[1]),str(x[2])])
+                            
+            self.rv.data = [ #rv.data stores a list of dictionaries, each item is a row from the database
+                {'name.text': table[x][0],
+                'sid.text': table[x][1],
+                'time_in.text': table[x][2],
+                'time_out.text': table[x][3],
+                'machs.text': 'Click for machines'
+                }
+                for x in range(numRows)]
+            self.rv.data = sorted(self.rv.data, key=lambda x: x['time_in.text'], reverse=True) #sortTIDown
+            self.masterData = self.rv.data[:]
+            self.rv.data = self.masterData[0:100] #default is latest 100 rows shown
+            time.sleep(30)
 
     def switchLimit(self):
         newList = []
@@ -263,6 +269,10 @@ class LogScreen(Screen):
         self.ids.TI.sortState = 'down'
         self.ids.TO.text = 'Time Out '
         self.ids.TO.sortState = 'none'
+    
+    def on_leave(self, *args):
+        self.t.cancel()
+        return super().on_leave(*args)
 
       
 class MachinesUsed(Popup):
