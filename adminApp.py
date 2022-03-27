@@ -200,6 +200,13 @@ class LogScreen(Screen):
         # self.populate()
         self.t = threading.Thread(target = self.populate, daemon=True)
         self.t.start()
+        #resetting column labels
+        self.ids.student.text = 'Students '
+        self.ids.student.sortState = 'none'
+        self.ids.TI.text = 'Time In \u25BC'
+        self.ids.TI.sortState = 'down'
+        self.ids.TO.text = 'Time Out '
+        self.ids.TO.sortState = 'none'
         return super().on_enter(*args)
     
     def populate(self):
@@ -271,7 +278,7 @@ class LogScreen(Screen):
         self.ids.TO.sortState = 'none'
     
     def on_leave(self, *args):
-        self.t.cancel()
+        # self.t.cancel() 
         return super().on_leave(*args)
 
       
