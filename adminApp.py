@@ -199,6 +199,8 @@ class LogScreen(Screen):
     def on_enter(self, *args):
         # self.populate()
         self.t = threading.Thread(target = self.populate, daemon=True)
+        self.stopPopulate = threading.Event()
+        self.stopPopulate.clear()
         self.t.start()
         #resetting column labels
         self.ids.student.text = 'Students '
@@ -210,7 +212,7 @@ class LogScreen(Screen):
         return super().on_enter(*args)
     
     def populate(self):
-        while (True):
+        while not self.stopPopulate.is_set():
             connection.ping(True)
             table = []
             dic = {}
@@ -278,7 +280,7 @@ class LogScreen(Screen):
         self.ids.TO.sortState = 'none'
     
     def on_leave(self, *args):
-        # self.t.cancel() 
+        self.stopPopulate.set()
         return super().on_leave(*args)
 
       
