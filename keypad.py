@@ -120,6 +120,7 @@ class MachineScreen(Screen):
     green = [0, 1, 0, 1]
     black = [0, 0, 0, 0]
     white = [1, 1, 1, 1]
+    gray = [1, 1, 1, 0.5]
     status = [red, green]
 
     machines = ['CNC Machine', 'Laser Cutter', 'Bandsaw', 'Sanding Belt', 'Drill Press', 'Heat Gun', 
@@ -128,9 +129,12 @@ class MachineScreen(Screen):
     def on_pre_enter(self, *args):
         allowedMachs = allowed_machines(IDScreen.curr_id)
         for id in self.ids:
-            if int(id) in allowedMachs:
-                self.ids[id].background_color = MachineScreen.status[0]
-                self.ids[id].color = MachineScreen.white
+            if id.isnumeric():
+                if int(id) in allowedMachs:
+                    self.ids[id].background_color = MachineScreen.status[0]
+                    self.ids[id].color = MachineScreen.white
+                else:
+                    self.ids[id].disabled = True
         return super().on_pre_enter(*args)
     
     def toggleColor(self, id, currColor):
@@ -173,5 +177,5 @@ class KeypadApp(App):
         return sm
 
 if __name__ == "__main__":
-    Window.fullscreen = True
+    # Window.fullscreen = True
     KeypadApp().run()

@@ -94,28 +94,13 @@ class AdminScreen(Screen):
             validated = False
         return validated
         
-    def viewAccess(self):
-        if not self.validateInput():
-            return
-        curr_id = int(self.ids.id_input.text)
-        curr_name = self.ids.name_input.text.lower()
-        connection.ping(True)
-        with connection:
-            with connection.cursor() as cursor:
-                cursor.execute("SELECT EXISTS(SELECT * FROM students WHERE student_id = "+str(curr_id)+" and name = \""+str(curr_name)+"\")")
-                if cursor.fetchall()[0][0] == 0:
-                    self.ids.instructions1.text = "Student Doesn't Exist"
-                    self.ids.instructions2.text = "Student Doesn't Exist"
-                    t1 = threading.Timer(1.5, lambda: AdminScreen.resetInstructions1(self))
-                    t1.start()
-                    t2 = threading.Timer(1.5, lambda: AdminScreen.resetInstructions2(self))
-                    t2.start()
-                    return
-        allowedMachs = allowed_machines(str(curr_id))
+    def clearInputs(self):
         for id in self.ids:
-            if id.isnumeric() and int(id) in allowedMachs:
-                self.ids[id].background_color = AdminScreen.status[1]
+            if id.isnumeric():
+                self.ids[id].background_color = AdminScreen.status[0]
                 self.ids[id].color = AdminScreen.white
+            if "input" in id:
+                self.ids[id].text = ''
 
     def addStudent(self):
         if not self.validateInput():
@@ -148,6 +133,7 @@ class AdminScreen(Screen):
                 t1.start()
                 t2 = threading.Timer(1.5, lambda: AdminScreen.resetInstructions2(self))
                 t2.start()
+        self.clearInputs()
 
     def updateStudent(self):
         if not self.validateInput():
@@ -180,6 +166,7 @@ class AdminScreen(Screen):
                 t1.start()
                 t2 = threading.Timer(1.5, lambda: AdminScreen.resetInstructions2(self))
                 t2.start()
+            self.clearInputs()
                 
 
     def toggleColor(self, id, currColor):
