@@ -202,13 +202,6 @@ class LogScreen(Screen):
         self.stopPopulate = threading.Event()
         self.stopPopulate.clear()
         self.t.start()
-        #resetting column labels
-        self.ids.student.text = 'Students '
-        self.ids.student.sortState = 'none'
-        self.ids.TI.text = 'Time In \u25BC'
-        self.ids.TI.sortState = 'down'
-        self.ids.TO.text = 'Time Out '
-        self.ids.TO.sortState = 'none'
         return super().on_enter(*args)
     
     def populate(self):
@@ -242,6 +235,15 @@ class LogScreen(Screen):
             self.rv.data = sorted(self.rv.data, key=lambda x: x['time_in.text'], reverse=True) #sortTIDown
             self.masterData = self.rv.data[:]
             self.rv.data = self.masterData[0:100] #default is latest 100 rows shown
+
+            #resetting labels
+            self.ids.limits.text = 'Showing: Latest 100 Sign-Ins'
+            self.ids.student.text = 'Students '
+            self.ids.student.sortState = 'none'
+            self.ids.TI.text = 'Time In \u25BC'
+            self.ids.TI.sortState = 'down'
+            self.ids.TO.text = 'Time Out '
+            self.ids.TO.sortState = 'none'
             time.sleep(30)
 
     def switchLimit(self):
