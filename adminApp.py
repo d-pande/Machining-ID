@@ -191,6 +191,12 @@ class AdminScreen(Screen):
     def resetInstructions2(self):
         self.ids.instructions2.text = "Please Enter\nStudent Name Below"
 
+class LimitText(TextInput):
+    max_characters = NumericProperty(4)
+    def insert_text(self, substring, from_undo=False):
+        if len(self.text) > self.max_characters and self.max_characters > 0:
+            substring = ""
+        TextInput.insert_text(self, substring, from_undo)
 
 class LogScreen(Screen):
     limitState = OptionProperty("latest100", options=["latest100", "lastWeek", "lastDay"])
