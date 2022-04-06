@@ -138,40 +138,6 @@
                 font_size: '20sp'
                 on_press: root.toggleColor(self.name, self.background_color)
 
-<Row>:
-    canvas.before: 
-        Color:
-            rgba: 0.5, 0.5, 0.5, 1
-        Rectangle:
-            size: self.size
-            pos: self.pos
-    BoxLayout:
-        orientation: 'vertical'
-        spacing: dp(-45)
-        padding: [0, -10, 0, -10]
-        Label:
-            id: name
-        Label:
-            id: sid
-            font_size: 14
-    Label:
-        id: time_in
-    Label:
-        id: time_out
-    Button:
-        id: machs
-        size_hint_y: .88
-        pos_hint: {"center_x":.5,"center_y":.5}
-        on_release: root.showMachines()
-
-<MachinesUsed>:
-    size_hint: .5, .5
-    title: 'Machines Used:'
-    on_open:
-        machines_used_label.text = root.update_text()
-    Label:
-        id: machines_used_label
-        #on_press: root.dismiss()
 
 <LogScreen>:
     rv: rv
@@ -236,44 +202,46 @@
                 size_hint_y: None
                 height: self.minimum_height
                 orientation: 'vertical'
-                spacing: dp(2)
-
-<AccessRow>:
+                spacing: dp(2) 
+ 
+ 
+<Row>:
     canvas.before: 
         Color:
             rgba: 0.5, 0.5, 0.5, 1
         Rectangle:
             size: self.size
             pos: self.pos
-    Label:
-        id: name
-    Label:
-        id: sid
     BoxLayout:
-        orientation: 'horizontal'
-        Button:
-            id: machs
-            size_hint_y: .88
-            pos_hint: {"center_x":.5,"center_y":.5}
-            on_release: root.showMachines()
-        Button:
-            id: edit
-            size_hint_y: .88
-            pos_hint: {"center_x":.5,"center_y":.5}
-            on_release: root.showMachines()
-
-<SearchBar>:
-    readonly: False
-    multiline: False
-
-<MachinesAllowed>:
-    size_hint: .5, .5
-    title: 'Machines Allowed:'
-    on_open:
-        machines_allowed_label.text = root.update_text()
+        orientation: 'vertical'
+        spacing: dp(-45)
+        padding: [0, -10, 0, -10]
+        Label:
+            id: name
+        Label:
+            id: sid
+            font_size: 14
     Label:
-        id: machines_allowed_label
+        id: time_in
+    Label:
+        id: time_out
+    Button:
+        id: machs
+        size_hint_y: .88
+        pos_hint: {"center_x":.5,"center_y":.5}
+        on_release: root.showMachines()
 
+
+<MachinesUsed>:
+    size_hint: .5, .5
+    title: 'Machines Used:'
+    on_open:
+        machines_used_label.text = root.update_text()
+    Label:
+        id: machines_used_label
+        #on_press: root.dismiss()
+        
+        
 <MachinesAccess>:
     rv: rv
     BoxLayout:
@@ -331,3 +299,43 @@
                 height: self.minimum_height
                 orientation: 'vertical'
                 spacing: dp(2)
+
+
+<AccessRow>:
+    canvas.before: 
+        Color:
+            rgba: 0.5, 0.5, 0.5, 1
+        Rectangle:
+            size: self.size
+            pos: self.pos
+    Label:
+        id: name
+    Label:
+        id: sid
+    BoxLayout:
+        orientation: 'horizontal'
+        Button:
+            id: machs
+            size_hint_y: .88
+            pos_hint: {"center_x":.5,"center_y":.5}
+            on_release: root.showMachines()
+        Button:
+            id: edit
+            size_hint_y: .88
+            pos_hint: {"center_x":.5,"center_y":.5}
+            on_release: root.showMachines()
+
+
+<SearchBar>:
+    readonly: False
+    multiline: False
+
+
+<MachinesAllowed>:
+    size_hint: .5, .5
+    title: 'Machines Allowed:'
+    on_open:
+        machines_allowed_label.text = root.update_text()
+    Label:
+        id: machines_allowed_label
+
