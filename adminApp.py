@@ -178,6 +178,13 @@ class AdminScreen(Screen):
     def resetInstructions2(self):
         self.ids.instructions2.text = "Please Enter\nStudent Name Below"
 
+    def on_leave(self, *args):
+        for id in self.ids:
+            if id.isnumeric():
+                self.ids[id].background_color = AdminScreen.status[0]
+                self.ids[id].color = AdminScreen.white
+        return super().on_leave(*args)
+
 class LimitText(TextInput):
     max_characters = NumericProperty(4)
     def insert_text(self, substring, from_undo=False):
