@@ -249,11 +249,18 @@
         id: name
     Label:
         id: sid
-    Button:
-        id: machs
-        size_hint_y: .88
-        pos_hint: {"center_x":.5,"center_y":.5}
-        on_release: root.showMachines()
+    BoxLayout:
+        orientation: 'horizontal'
+        Button:
+            id: machs
+            size_hint_y: .88
+            pos_hint: {"center_x":.5,"center_y":.5}
+            on_release: root.showMachines()
+        Button:
+            id: edit
+            size_hint_y: .88
+            pos_hint: {"center_x":.5,"center_y":.5}
+            on_release: root.showMachines()
 
 <SearchBar>:
     readonly: False

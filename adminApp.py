@@ -355,7 +355,8 @@ class MachinesAccess(Screen):
         self.rv.data = [ #rv.data stores a list of dictionaries, each item is a row from the database
             {'name.text': table[x][0],
             'sid.text': table[x][1],
-            'machs.text': 'Click for machines'
+            'machs.text': 'Show',
+            'edit.text' : 'Edit'
             }
             for x in range(numRows)]
         self.rv.data = sorted(self.rv.data, key=lambda x: x['name.text'])
