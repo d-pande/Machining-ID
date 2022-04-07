@@ -68,7 +68,13 @@ class AdminScreen(Screen):
     machines = ['CNC Machine', 'Laser Cutter', 'Bandsaw', 'Sanding Belt', 'Drill Press', 'Heat Gun', 
                 'Dremels / Rotary', 'Soldering'] #master list of machine names
 
+    updating = False
+    updatingName = ''
+    updatingID = 0
+
     def on_enter(self, *args):
+        if AdminScreen.updating:
+            self.showUpdating()
         return super().on_enter(*args)
 
     def scaleFont(self):
@@ -185,8 +191,15 @@ class AdminScreen(Screen):
         self.ids.name_input.text = ''
         return super().on_leave(*args)
     
-    def test(self, name, id):
-        print(id)
+    def showUpdating(self):
+        self.ids.id_input.text = AdminScreen.updatingID
+        self.ids.name_input.text = AdminScreen.updatingName
+        allowedMachs = allowed_machines(str(AdminScreen.updatingID))
+        for id in self.ids:
+            if id.isnumeric() and int(id) in allowedMachs:
+                self.ids[id].background_color = AdminScreen.status[1]
+                self.ids[id].color = AdminScreen.white
+        AdminScreen.updating = False
 
 
 class LimitText(TextInput):
@@ -406,7 +419,9 @@ class AccessRow(RecycleKVIDsDataViewBehavior, BoxLayout):
     def editMachines(self, name, id):
         App.get_running_app().sm.transition.direction = 'right'
         App.get_running_app().sm.current = 'admin'
-        AdminScreen.test(self, name, id)
+        AdminScreen.updating = True
+        AdminScreen.updatingName = name
+        AdminScreen.updatingID = id
 
 
 
