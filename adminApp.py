@@ -69,8 +69,6 @@ class AdminScreen(Screen):
                 'Dremels / Rotary', 'Soldering'] #master list of machine names
 
     def on_enter(self, *args):
-        self.ids.id_input.text = ''
-        self.ids.name_input.text = ''
         return super().on_enter(*args)
 
     def scaleFont(self):
@@ -183,7 +181,13 @@ class AdminScreen(Screen):
             if id.isnumeric():
                 self.ids[id].background_color = AdminScreen.status[0]
                 self.ids[id].color = AdminScreen.white
+        self.ids.id_input.text = ''
+        self.ids.name_input.text = ''
         return super().on_leave(*args)
+    
+    def test(self, name, id):
+        print(id)
+
 
 class LimitText(TextInput):
     max_characters = NumericProperty(4)
@@ -191,6 +195,7 @@ class LimitText(TextInput):
         if len(self.text) > self.max_characters and self.max_characters > 0:
             substring = ""
         TextInput.insert_text(self, substring, from_undo)
+
 
 class LogScreen(Screen):
     limitState = OptionProperty("latest100", options=["latest100", "lastWeek", "lastDay"])
@@ -370,6 +375,7 @@ class MachinesAccess(Screen):
         self.masterData = self.rv.data[:]
 
 
+
 class MachinesAllowed(Popup):
     sid = NumericProperty()
     def __init__(self, studentID, **kwargs):
@@ -397,6 +403,13 @@ class AccessRow(RecycleKVIDsDataViewBehavior, BoxLayout):
         p = MachinesAllowed(studentID)
         p.open()
 
+    def editMachines(self, name, id):
+        App.get_running_app().sm.transition.direction = 'right'
+        App.get_running_app().sm.current = 'admin'
+        AdminScreen.test(self, name, id)
+
+
+
 
 class SearchBar(TextInput):
     word_list = ListProperty()
@@ -417,13 +430,13 @@ class SearchBar(TextInput):
 
 class AdminApp(App):
     def build(self):
-        sm = ScreenManager()
-        sm.add_widget(AdminScreen(name = 'admin'))
-        sm.add_widget(LogScreen(name = 'log'))
+        self.sm = ScreenManager()
+        self.sm.add_widget(AdminScreen(name = 'admin'))
+        self.sm.add_widget(LogScreen(name = 'log'))
         Window.minimum_width = 800
         Window.minimum_height = 600
-        sm.add_widget(MachinesAccess(name = 'access'))
-        return sm
+        self.sm.add_widget(MachinesAccess(name = 'access'))
+        return self.sm
        
 if __name__ == "__main__":
     AdminApp().run()

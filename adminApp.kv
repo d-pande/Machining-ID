@@ -323,7 +323,7 @@
             id: edit
             size_hint_y: .88
             pos_hint: {"center_x":.5,"center_y":.5}
-            on_release: root.showMachines()
+            on_release: root.editMachines(root.ids.name.text, root.ids.sid.text)
 
 
 <SearchBar>:
