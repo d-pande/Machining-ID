@@ -195,10 +195,22 @@ class AdminScreen(Screen):
         self.ids.id_input.text = AdminScreen.updatingID
         self.ids.name_input.text = AdminScreen.updatingName
         allowedMachs = allowed_machines(str(AdminScreen.updatingID))
-        for id in self.ids:
-            if id.isnumeric() and int(id) in allowedMachs:
-                self.ids[id].background_color = AdminScreen.status[1]
-                self.ids[id].color = AdminScreen.white
+        if allowedMachs == -1:
+            self.ids.instructions1.text = "Student Has Access\nto No Machines"
+            self.ids.instructions2.text = "Student Has Access\nto No Machines"
+            t1 = threading.Timer(4.0, lambda: AdminScreen.resetInstructions1(self))
+            t1.start()
+            t2 = threading.Timer(4.0, lambda: AdminScreen.resetInstructions2(self))
+            t2.start()
+            for id in self.ids:
+                if id.isnumeric():
+                    self.ids[id].background_color = AdminScreen.status[0]
+                    self.ids[id].color = AdminScreen.white
+        else:
+            for id in self.ids:
+                if id.isnumeric() and int(id) in allowedMachs:
+                    self.ids[id].background_color = AdminScreen.status[1]
+                    self.ids[id].color = AdminScreen.white
         AdminScreen.updating = False
 
 
@@ -452,7 +464,7 @@ class LoginScreen(Screen):
 class AdminApp(App):
     def build(self):
         self.sm = ScreenManager()
-        self.sm.add_widget(LoginScreen(name = 'login'))
+        # self.sm.add_widget(LoginScreen(name = 'login'))
         self.sm.add_widget(AdminScreen(name = 'admin'))
         self.sm.add_widget(LogScreen(name = 'log'))
         Window.minimum_width = 800
