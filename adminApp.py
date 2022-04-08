@@ -14,7 +14,7 @@ import threading
 import datetime
 import time
 
-import pcreds as creds #file with db credentials
+import credentials as creds #file with db credentials
 
 
 connection = pymysql.connect(host=creds.dbhost,
@@ -428,7 +428,8 @@ class SearchBar(TextInput):
 class LoginScreen(Screen):
     def enterPass(self, p):
         if p == creds.loginPass:
-            print("right password")
+            App.get_running_app().sm.transition.direction = 'left'
+            App.get_running_app().sm.current = 'admin'
         else:
             print("wrong password")
 
