@@ -339,3 +339,37 @@
     Label:
         id: machines_allowed_label
 
+
+<LoginScreen>:
+    BoxLayout:
+        orientation: 'horizontal'
+        AnchorLayout:
+            anchor_x: 'right'
+            TextInput:
+                id: passcode
+                password: True
+                multiline: False
+                font_size: '25sp'
+                size_hint_x: .5
+                size_hint_y: .1
+                hint_text: 'Enter Passcode'
+                pos_hint_y: .5
+                text_validate_unfocus: False
+                on_text_validate: 
+                    root.enterPass(root.ids.passcode.text)
+                    root.ids.passcode.text = ''
+                # background_color: (1, 0, 1, 0.5)
+        AnchorLayout:
+            anchor_x: 'left'
+            Button:
+                text: 'Enter'
+                size_hint_x: .25
+                size_hint_y: .1
+                font_size: '25sp'
+                on_release: 
+                    root.enterPass(root.ids.passcode.text)
+                    root.ids.passcode.text = ''
+                
+
+
+

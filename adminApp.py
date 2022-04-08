@@ -14,7 +14,7 @@ import threading
 import datetime
 import time
 
-import credentials as creds #file with db credentials
+import pcreds as creds #file with db credentials
 
 
 connection = pymysql.connect(host=creds.dbhost,
@@ -375,7 +375,6 @@ class MachinesAccess(Screen):
         self.masterData = self.rv.data[:]
 
 
-
 class MachinesAllowed(Popup):
     sid = NumericProperty()
     def __init__(self, studentID, **kwargs):
@@ -409,8 +408,6 @@ class AccessRow(RecycleKVIDsDataViewBehavior, BoxLayout):
         AdminScreen.test(self, name, id)
 
 
-
-
 class SearchBar(TextInput):
     word_list = ListProperty()
     mData = ListProperty()
@@ -428,9 +425,18 @@ class SearchBar(TextInput):
         self.parent.parent.parent.ids.rv.data = display_data
       
 
+class LoginScreen(Screen):
+    def enterPass(self, p):
+        if p == creds.loginPass:
+            print("right password")
+        else:
+            print("wrong password")
+
+
 class AdminApp(App):
     def build(self):
         self.sm = ScreenManager()
+        self.sm.add_widget(LoginScreen(name = 'login'))
         self.sm.add_widget(AdminScreen(name = 'admin'))
         self.sm.add_widget(LogScreen(name = 'log'))
         Window.minimum_width = 800
