@@ -339,3 +339,25 @@
     Label:
         id: machines_allowed_label
 
+
+<LoginScreen>:
+    AnchorLayout:
+        anchor_x: 'center'
+        TextInput:
+            id: passcode
+            password: True
+            multiline: False
+            font_size: '25sp'
+            size_hint_x: .25
+            size_hint_y: .1
+            hint_text: 'Enter Passcode'
+            pos_hint_y: .5
+            text_validate_unfocus: False
+            on_text_validate: 
+                root.enterPass(root.ids.passcode.text)
+                root.ids.passcode.text = ''
+       
+                
+
+
+

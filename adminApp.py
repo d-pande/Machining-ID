@@ -388,7 +388,6 @@ class MachinesAccess(Screen):
         self.masterData = self.rv.data[:]
 
 
-
 class MachinesAllowed(Popup):
     sid = NumericProperty()
     def __init__(self, studentID, **kwargs):
@@ -424,8 +423,6 @@ class AccessRow(RecycleKVIDsDataViewBehavior, BoxLayout):
         AdminScreen.updatingID = id
 
 
-
-
 class SearchBar(TextInput):
     word_list = ListProperty()
     mData = ListProperty()
@@ -443,9 +440,19 @@ class SearchBar(TextInput):
         self.parent.parent.parent.ids.rv.data = display_data
       
 
+class LoginScreen(Screen):
+    def enterPass(self, p):
+        if p == creds.loginPass:
+            App.get_running_app().sm.transition.direction = 'left'
+            App.get_running_app().sm.current = 'admin'
+        else:
+            print("wrong password")
+
+
 class AdminApp(App):
     def build(self):
         self.sm = ScreenManager()
+        self.sm.add_widget(LoginScreen(name = 'login'))
         self.sm.add_widget(AdminScreen(name = 'admin'))
         self.sm.add_widget(LogScreen(name = 'log'))
         Window.minimum_width = 800
