@@ -9,12 +9,17 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.properties import NumericProperty, ReferenceListProperty, ObjectProperty, StringProperty, OptionProperty, ListProperty
 from kivy.uix.popup import Popup
 from kivy.core.window import Window
+from kivy.config import Config
 import pymysql.cursors
 import threading
 import datetime
 import time
+from kivy.clock import Clock
+from kivy.uix.checkbox import CheckBox
 
-import credentials as creds #file with db credentials
+
+
+import pcreds as creds #file with db credentials
 
 
 connection = pymysql.connect(host=creds.dbhost,
@@ -58,6 +63,18 @@ def allowed_machines(id): #returns list of machine IDs that a student can use
                 machs.append(l[0]) #being stored as ints
             return machs
 
+def changePass(newPass): #changes loginPass in credentials.py
+    with open('credentials.py', 'r') as file:
+        # read a list of lines into data
+        data = file.readlines()
+    counter = 0
+    for line in data:
+        if line.startswith('loginPass'):
+            data[counter] = "loginPass = \'"+str(newPass)+"\'\n"
+        counter += 1
+    # and write everything back
+    with open('credentials.py', 'w') as file:
+        file.writelines(data)
 
 class AdminScreen(Screen):
     red = [1, 0, 0, 1]
@@ -459,12 +476,20 @@ class LoginScreen(Screen):
             App.get_running_app().sm.current = 'admin'
         else:
             print("wrong password")
+    
+    def checkbox_click(self,instance,value):
+        if value:
+            self.ids.passcode.password = False
+        else:
+            self.ids.passcode.password = True
+    
+
 
 
 class AdminApp(App):
     def build(self):
         self.sm = ScreenManager()
-        # self.sm.add_widget(LoginScreen(name = 'login'))
+        self.sm.add_widget(LoginScreen(name = 'login'))
         self.sm.add_widget(AdminScreen(name = 'admin'))
         self.sm.add_widget(LogScreen(name = 'log'))
         Window.minimum_width = 800
@@ -473,4 +498,5 @@ class AdminApp(App):
         return self.sm
        
 if __name__ == "__main__":
+    Config.set('input', 'mouse', 'mouse,multitouch_on_demand')
     AdminApp().run()
