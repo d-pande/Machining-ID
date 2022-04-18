@@ -475,7 +475,8 @@ class LoginScreen(Screen):
             App.get_running_app().sm.transition.direction = 'left'
             App.get_running_app().sm.current = 'admin'
         else:
-            print("wrong password")
+            # print("wrong password")
+            pass
     
     def checkbox_click(self,instance,value):
         if value:
