@@ -19,7 +19,7 @@ from kivy.uix.checkbox import CheckBox
 
 
 
-import pcreds as creds #file with db credentials
+import credentials as creds #file with db credentials
 
 
 connection = pymysql.connect(host=creds.dbhost,
