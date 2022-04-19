@@ -16,6 +16,7 @@ import datetime
 import time
 from kivy.clock import Clock
 from kivy.uix.checkbox import CheckBox
+import importlib
 
 
 
@@ -483,6 +484,14 @@ class LoginScreen(Screen):
             self.ids.passcode.password = False
         else:
             self.ids.passcode.password = True
+
+class ChangePassScreen(Screen):
+    def changePass(self, lastPass, newPass):
+        if lastPass == creds.loginPass and not self.ids.newPassInput.text == "":
+            changePass(newPass)
+            importlib.reload(creds)
+            self.manager.transition.direction = 'left'
+            self.manager.current = "login"
     
 
 
@@ -493,9 +502,10 @@ class AdminApp(App):
         self.sm.add_widget(LoginScreen(name = 'login'))
         self.sm.add_widget(AdminScreen(name = 'admin'))
         self.sm.add_widget(LogScreen(name = 'log'))
+        self.sm.add_widget(MachinesAccess(name = 'access'))
+        self.sm.add_widget(ChangePassScreen(name = 'changePass'))
         Window.minimum_width = 800
         Window.minimum_height = 600
-        self.sm.add_widget(MachinesAccess(name = 'access'))
         return self.sm
        
 if __name__ == "__main__":

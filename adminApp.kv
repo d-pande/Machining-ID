@@ -373,12 +373,42 @@
         anchor_x: 'center'
         anchor_y: 'bottom'
         Button:
-            text: 'test'
+            text: 'Change Password'
             size_hint: (.3,.15)
+            on_release: 
+                root.manager.transition.direction = 'right'
+                root.manager.current = 'changePass'
 
 
-       
-                
-
-
-
+<ChangePassScreen>:
+    BoxLayout:
+        padding: [40]
+        spacing: [20, 20]
+        orientation: 'vertical'
+        TextInput:
+            id: lastPassInput
+            # password: True
+            multiline: False
+            focus: True
+            font_size: '25sp'
+            hint_text: 'Enter Last Password'
+        TextInput:
+            id: newPassInput
+            # password: True
+            multiline: False
+            focus: True
+            font_size: '25sp'
+            hint_text: 'Enter New Password'
+        GridLayout:
+            rows: 1
+            cols: 2
+            Button:
+                text: 'Change Password'
+                on_release: 
+                    root.changePass(root.ids.lastPassInput.text, root.ids.newPassInput.text)
+            Button:
+                text: 'Cancel'
+                on_release:
+                    root.manager.transition.direction = 'left'
+                    root.manager.current = 'login'
+            
