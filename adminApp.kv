@@ -369,6 +369,12 @@
             size_hint: None, None #idk why we need this
             pos: (checkbox.x+2*checkbox.width, checkbox.y-checkbox.height) #not sure why this works but it does
             text: 'Click to show password'
+        Label:
+            id: message
+            text: ''
+            size_hint: .25, .1
+            pos: (passcode.x, passcode.y-message.height)
+            font_size: '20sp'
     AnchorLayout:
         anchor_x: 'center'
         anchor_y: 'bottom'
@@ -378,6 +384,7 @@
             on_release: 
                 root.manager.transition.direction = 'right'
                 root.manager.current = 'changePass'
+
 
 
 <ChangePassScreen>:

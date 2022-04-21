@@ -476,8 +476,13 @@ class LoginScreen(Screen):
             App.get_running_app().sm.transition.direction = 'left'
             App.get_running_app().sm.current = 'admin'
         else:
-            # print("wrong password")
+            self.ids.message.text = "Incorrect Passcode"
+            t1 = (threading.Timer(1.5, lambda: LoginScreen.resetWrongPasscode(self)))
+            t1.start()
             pass
+    
+    def resetWrongPasscode(self):
+        self.ids.message.text = ""
     
     def checkbox_click(self,instance,value):
         if value:
