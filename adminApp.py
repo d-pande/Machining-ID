@@ -19,7 +19,7 @@ from kivy.uix.checkbox import CheckBox
 import importlib
 
 
-import credentials as creds #file with db credentials
+import pcreds as creds #file with db credentials
 
 
 connection = pymysql.connect(host=creds.dbhost,
@@ -495,6 +495,10 @@ class LoginScreen(Screen):
             self.ids.passcode.password = False
         else:
             self.ids.passcode.password = True
+
+    def on_leave(self, *args):
+        LoginScreen.resetMessage(self)
+        self.ids.passcode.text = ""
 
 
 class ChangePassScreen(Screen):
