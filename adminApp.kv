@@ -410,12 +410,12 @@
             rows: 1
             cols: 2
             Button:
-                text: 'Change Password'
-                on_release: 
-                    root.changePass(root.ids.lastPassInput.text, root.ids.newPassInput.text)
-            Button:
                 text: 'Cancel'
                 on_release:
                     root.manager.transition.direction = 'left'
                     root.manager.current = 'login'
+            Button:
+                text: 'Change Password'
+                on_release: 
+                    root.changePass(root.ids.lastPassInput.text, root.ids.newPassInput.text)
             

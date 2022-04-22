@@ -19,7 +19,6 @@ from kivy.uix.checkbox import CheckBox
 import importlib
 
 
-
 import credentials as creds #file with db credentials
 
 
@@ -64,6 +63,7 @@ def allowed_machines(id): #returns list of machine IDs that a student can use
                 machs.append(l[0]) #being stored as ints
             return machs
 
+
 def changePass(newPass): #changes loginPass in credentials.py
     with open('credentials.py', 'r') as file:
         # read a list of lines into data
@@ -76,6 +76,7 @@ def changePass(newPass): #changes loginPass in credentials.py
     # and write everything back
     with open('credentials.py', 'w') as file:
         file.writelines(data)
+
 
 class AdminScreen(Screen):
     red = [1, 0, 0, 1]
@@ -471,17 +472,22 @@ class SearchBar(TextInput):
       
 
 class LoginScreen(Screen):
+    def on_enter(self, *args):
+        t1 = (threading.Timer(1.5, lambda: LoginScreen.resetMessage(self)))
+        t1.start()
+        return super().on_enter(*args)
+
     def enterPass(self, p):
         if p == creds.loginPass:
             App.get_running_app().sm.transition.direction = 'left'
             App.get_running_app().sm.current = 'admin'
         else:
             self.ids.message.text = "Incorrect Passcode"
-            t1 = (threading.Timer(1.5, lambda: LoginScreen.resetWrongPasscode(self)))
+            t1 = (threading.Timer(1.5, lambda: LoginScreen.resetMessage(self)))
             t1.start()
             pass
     
-    def resetWrongPasscode(self):
+    def resetMessage(self):
         self.ids.message.text = ""
     
     def checkbox_click(self,instance,value):
@@ -490,6 +496,7 @@ class LoginScreen(Screen):
         else:
             self.ids.passcode.password = True
 
+
 class ChangePassScreen(Screen):
     def changePass(self, lastPass, newPass):
         if lastPass == creds.loginPass and not self.ids.newPassInput.text == "":
@@ -497,10 +504,9 @@ class ChangePassScreen(Screen):
             importlib.reload(creds)
             self.manager.transition.direction = 'left'
             self.manager.current = "login"
+            self.manager.get_screen('login').ids.message.text = "Passcode Changed"
+        
     
-
-
-
 class AdminApp(App):
     def build(self):
         self.sm = ScreenManager()
