@@ -347,10 +347,10 @@
             password: True
             multiline: False
             focus: True
-            font_size: '25sp'
+            font_size: '22sp'
             size_hint_x: .25
             size_hint_y: .1
-            hint_text: 'Enter Passcode'
+            hint_text: 'Enter Passcode +\nPress Enter'
             pos_hint: {'center_x': .5, 'y': 0.5}
             text_validate_unfocus: False
             on_text_validate: 
@@ -399,6 +399,7 @@
             focus: True
             font_size: '25sp'
             hint_text: 'Enter Last Password'
+            write_tab: False
         TextInput:
             id: newPassInput
             # password: True
@@ -406,6 +407,7 @@
             focus: True
             font_size: '25sp'
             hint_text: 'Enter New Password'
+            write_tab: False
         GridLayout:
             rows: 1
             cols: 2
