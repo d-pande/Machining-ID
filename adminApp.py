@@ -17,6 +17,7 @@ import time
 from kivy.clock import Clock
 from kivy.uix.checkbox import CheckBox
 import importlib
+from keypad import globalMachines
 
 
 import credentials as creds #file with db credentials
@@ -84,8 +85,7 @@ class AdminScreen(Screen):
     white = [1, 1, 1, 1]
     status = [red, green]
 
-    machines = ['CNC Machine', 'Laser Cutter', 'Bandsaw', 'Sanding Belt', 'Drill Press', 'Heat Gun', 
-                'Dremels / Rotary', 'Soldering'] #master list of machine names
+    machines = globalMachines
 
     updating = False
     updatingName = ''

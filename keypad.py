@@ -1,3 +1,6 @@
+globalMachines = ['CNC Machine', 'Laser Cutter', 'Bandsaw', 'Sanding Belt', 'Drill Press', 'Heat Gun', 
+                'Dremels / Rotary', 'Soldering']
+
 from kivy.app import App
 from kivy.uix.button import Button
 from kivy.uix.boxlayout import BoxLayout
@@ -63,9 +66,12 @@ def signOut(id): #signs out a student given their ID, only updates last entry in
             timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
             cursor.execute("SELECT time_in FROM log l1 WHERE sid = "+str(id)+" and time_in = (SELECT MAX(time_in) FROM log l2 WHERE l1.sid = l2.sid) ORDER BY sid, time_in;")
             result = cursor.fetchall()
+            if not result:
+                return False
             r = result[0][0]
             cursor.execute("update log set time_out = '"+timestamp+"' where sid = "+str(id)+" and time_in = '"+str(r)+"';")
             connection.commit()
+            return True
                        
 
 class IDScreen(Screen):
@@ -98,15 +104,16 @@ class IDScreen(Screen):
     def signOut(self):
         id = self.id_label.text[4:]
         if (len(id) == 5 and checkID(id)):
-            signOut(id)
-            self.ids.instructions.text = 'Signed Out!'
-            t = threading.Timer(3.0, lambda: IDScreen.resetInstructions(self))
-            t.start()
+            if not signOut(id):
+                self.ids.instructions.text = 'Sign In Idiot'
+            else:
+                self.ids.instructions.text = 'Signed Out!'
+                self.id_label.text = 'ID: '
         else:
-            self.ids.instructions.text = 'Invalid ID' 
-            t = threading.Timer(3.0, lambda: IDScreen.resetInstructions(self))
-            t.start()
-        self.id_label.text = 'ID: '
+            self.ids.instructions.text = 'Invalid ID'
+            self.id_label.text = 'ID: '
+        t = threading.Timer(3.0, lambda: IDScreen.resetInstructions(self))
+        t.start()
                 
     
     def resetInstructions(self):
@@ -122,8 +129,7 @@ class MachineScreen(Screen):
     gray = [1, 1, 1, 0.5]
     status = [red, green]
 
-    machines = ['CNC Machine', 'Laser Cutter', 'Bandsaw', 'Sanding Belt', 'Drill Press', 'Heat Gun', 
-                'Dremels / Rotary', 'Soldering']
+    machines = globalMachines
 
     def on_pre_enter(self, *args):
         allowedMachs = allowed_machines(IDScreen.curr_id)
