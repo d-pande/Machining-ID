@@ -400,10 +400,10 @@ class MachinesAccess(Screen):
         table = []
         with connection:
                 with connection.cursor() as cursor:
-                    cursor.execute("SELECT COUNT(*) FROM students;")
+                    cursor.execute("SELECT COUNT(*) FROM students where hide=false;")
                     r = cursor.fetchall()
                     numRows = r[0][0]
-                    cursor.execute("select * from students;")
+                    cursor.execute("select * from students where hide=false;")
                     students = cursor.fetchall()
                     for x in students:
                         table.append([str(x[1]),str(x[0])])
