@@ -170,7 +170,7 @@ class AdminScreen(Screen):
         connection.ping(True)
         with connection:
             with connection.cursor() as cursor:
-                cursor.execute("SELECT EXISTS(SELECT * FROM students WHERE student_id = "+str(curr_id)+" and name = \""+str(curr_name)+"\")")
+                cursor.execute("SELECT EXISTS(SELECT * FROM students WHERE student_id = "+str(curr_id)+")")# and name = \""+str(curr_name)+"\")")
                 if cursor.fetchall()[0][0] == 0:
                     self.ids.instructions1.text = "Student Doesn't Exist"
                     self.ids.instructions2.text = "Student Doesn't Exist"
@@ -181,7 +181,7 @@ class AdminScreen(Screen):
                     return
                 cursor.callproc("update_student", [curr_id, currMachines[0], currMachines[1], 
                                 currMachines[2], currMachines[3], currMachines[4], currMachines[5], 
-                                currMachines[6], currMachines[7]])
+                                currMachines[6], currMachines[7], curr_name])
                 connection.commit()
                 self.ids.instructions1.text = "Student Updated"
                 self.ids.instructions2.text = "Student Updated"
