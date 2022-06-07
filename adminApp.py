@@ -274,7 +274,7 @@ class LogScreen(Screen):
                             table.append([dic.get(x[0]),('('+str(x[0])+')'),str(x[1]),str(x[2])])
                             
             self.rv.data = [ #rv.data stores a list of dictionaries, each item is a row from the database
-                {'name.text': table[x][0],
+                {'name.text': table[x][0].title(),
                 'sid.text': table[x][1],
                 'time_in.text': table[x][2],
                 'time_out.text': table[x][3],
@@ -409,7 +409,7 @@ class MachinesAccess(Screen):
                         table.append([str(x[1]),str(x[0])])
         self.rv.data = []
         self.rv.data = [ #rv.data stores a list of dictionaries, each item is a row from the database
-            {'name.text': table[x][0],
+            {'name.text': table[x][0].title(),
             'sid.text': table[x][1],
             'machs.text': 'Show',
             'edit.text' : 'Edit'
