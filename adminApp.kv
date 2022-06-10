@@ -37,7 +37,7 @@
                     write_tab: False
             GridLayout:
                 id: gridButtons
-                rows: 4
+                rows: 5
                 cols: 1
                 spacing: [15]
                 padding: [30]
@@ -54,6 +54,12 @@
                     background_color: root.red
                     font_size: '25sp'
                     on_press: root.updateStudent()
+                Button:
+                    id: remove
+                    text: 'Remove'
+                    background_color: root.red
+                    font_size: '25sp'
+                    #on_press: root.addStudent()
                 Button:
                     id: viewMachines
                     text: 'Manage Students'
