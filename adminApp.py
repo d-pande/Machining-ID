@@ -137,18 +137,26 @@ class AdminScreen(Screen):
         connection.ping(True)
         with connection:
             with connection.cursor() as cursor:
-                cursor.execute("select name from students where student_id = " + str(curr_id))
+                cursor.execute("select name from students where student_id = " + str(curr_id) + " and hide = 1")
                 if len(cursor.fetchall()) == 1:
-                    self.ids.instructions1.text = "Student Already Exists"
-                    self.ids.instructions2.text = "Student Already Exists"
-                    t1 = threading.Timer(1.5, lambda: AdminScreen.resetInstructions1(self))
-                    t1.start()
-                    t2 = threading.Timer(1.5, lambda: AdminScreen.resetInstructions2(self))
-                    t2.start()
-                    return
-                cursor.callproc("add_new_student", [curr_id, curr_name, currMachines[0], currMachines[1], 
+                    cursor.execute("update students set hide = 0 where student_id = " + str(curr_id))
+                    cursor.callproc("update_student", [curr_id, currMachines[0], currMachines[1], 
                                 currMachines[2], currMachines[3], currMachines[4], currMachines[5], 
-                                currMachines[6], currMachines[7]])
+                                currMachines[6], currMachines[7], curr_name])
+                else:
+                    cursor.execute("select name from students where student_id = " + str(curr_id) + " and hide = 0")
+                    if len(cursor.fetchall()) == 1:
+                        self.ids.instructions1.text = "Student Already Exists"
+                        self.ids.instructions2.text = "Student Already Exists"
+                        t1 = threading.Timer(1.5, lambda: AdminScreen.resetInstructions1(self))
+                        t1.start()
+                        t2 = threading.Timer(1.5, lambda: AdminScreen.resetInstructions2(self))
+                        t2.start()
+                        return
+                    else:
+                        cursor.callproc("add_new_student", [curr_id, curr_name, currMachines[0], currMachines[1], 
+                                        currMachines[2], currMachines[3], currMachines[4], currMachines[5], 
+                                        currMachines[6], currMachines[7]])
                 connection.commit()
                 self.ids.instructions1.text = "Student Added"
                 self.ids.instructions2.text = "Student Added"
@@ -199,7 +207,24 @@ class AdminScreen(Screen):
         connection.ping(True)
         with connection:
             with connection.cursor() as cursor:
-                cursor.execute("update ")
+                cursor.execute("SELECT EXISTS(SELECT * FROM students WHERE student_id = "+str(curr_id)+" and hide = 0)")# and name = \""+str(curr_name)+"\")")
+                if cursor.fetchall()[0][0] == 0:
+                    self.ids.instructions1.text = "Student Doesn't Exist"
+                    self.ids.instructions2.text = "Student Doesn't Exist"
+                    t1 = threading.Timer(1.5, lambda: AdminScreen.resetInstructions1(self))
+                    t1.start()
+                    t2 = threading.Timer(1.5, lambda: AdminScreen.resetInstructions2(self))
+                    t2.start()
+                    return
+                else:
+                    cursor.execute("update students set hide = 1 where student_id = " + str(curr_id))
+                    connection.commit()
+                    self.ids.instructions1.text = "Student Removed"
+                    self.ids.instructions2.text = "Student Removed"
+                    t1 = threading.Timer(1.5, lambda: AdminScreen.resetInstructions1(self))
+                    t1.start()
+                    t2 = threading.Timer(1.5, lambda: AdminScreen.resetInstructions2(self))
+                    t2.start()
         self.clearInputs()
                 
 
