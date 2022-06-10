@@ -189,7 +189,18 @@ class AdminScreen(Screen):
                 t1.start()
                 t2 = threading.Timer(1.5, lambda: AdminScreen.resetInstructions2(self))
                 t2.start()
-            self.clearInputs()
+        self.clearInputs()
+
+    def removeStudent(self):
+        if not self.validateInput():
+            return
+        curr_id = int(self.ids.id_input.text)
+        curr_name = self.ids.name_input.text.lower()
+        connection.ping(True)
+        with connection:
+            with connection.cursor() as cursor:
+                cursor.execute("update ")
+        self.clearInputs()
                 
 
     def toggleColor(self, id, currColor):
