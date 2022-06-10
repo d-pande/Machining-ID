@@ -65,18 +65,21 @@ def allowed_machines(id): #returns list of machine IDs that a student can use
             return machs
 
 
-def changePass(newPass): #changes loginPass in credentials.py
-    with open('credentials.py', 'r') as file:
-        # read a list of lines into data
-        data = file.readlines()
-    counter = 0
-    for line in data:
-        if line.startswith('loginPass'):
-            data[counter] = "loginPass = \'"+str(newPass)+"\'\n"
-        counter += 1
-    # and write everything back
-    with open('credentials.py', 'w') as file:
-        file.writelines(data)
+def changePass(newPass):
+    connection.ping(True)
+    with connection:
+        with connection.cursor() as cursor:
+            cursor.execute("update new_table set id = '"+newPass+"' where id != '"+newPass+"';")
+            connection.commit()
+
+
+def getPass():
+    connection.ping(True)
+    with connection:
+        with connection.cursor() as cursor:
+            cursor.execute("select id from new_table")
+            password = cursor.fetchall()[0][0]
+            return password
 
 
 class AdminScreen(Screen):
@@ -478,7 +481,7 @@ class LoginScreen(Screen):
         return super().on_enter(*args)
 
     def enterPass(self, p):
-        if p == creds.loginPass:
+        if p == getPass():
             App.get_running_app().sm.transition.direction = 'left'
             App.get_running_app().sm.current = 'admin'
         else:
@@ -503,9 +506,8 @@ class LoginScreen(Screen):
 
 class ChangePassScreen(Screen):
     def changePass(self, lastPass, newPass):
-        if lastPass == creds.loginPass and not self.ids.newPassInput.text == "":
+        if lastPass == getPass() and not self.ids.newPassInput.text == "":
             changePass(newPass)
-            importlib.reload(creds)
             self.manager.transition.direction = 'left'
             self.manager.current = "login"
             self.manager.get_screen('login').ids.message.text = "Passcode Changed"
