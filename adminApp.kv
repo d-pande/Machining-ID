@@ -158,7 +158,7 @@
                 size: self.size
                 pos: self.pos
         GridLayout:
-            cols: 4
+            cols: 3
             rows: 1
             size_hint_y: .25
             height: dp(108) #height of child widgets
@@ -172,7 +172,10 @@
             Button:
                 id: limits
                 text: 'Showing: Latest 100 Sign-Ins'
-                on_release: root.switchLimit()
+                on_release: root.switchLimit()  
+            LogSearchBar:
+                id: search
+                hint_text:'Enter Student Name, ID, or Time'
         GridLayout:
             cols: 4
             rows: 1

@@ -331,7 +331,7 @@ class LogScreen(Screen):
             self.ids.TI.sortState = 'down'
             self.ids.TO.text = 'Time Out '
             self.ids.TO.sortState = 'none'
-            time.sleep(30)
+            time.sleep(120) #time between log screen refreshes
 
     def switchLimit(self):
         newList = []
@@ -367,9 +367,12 @@ class LogScreen(Screen):
         self.ids.TI.sortState = 'down'
         self.ids.TO.text = 'Time Out '
         self.ids.TO.sortState = 'none'
+        
+        self.ids.search.text = '' #clears search bar
     
     def on_leave(self, *args):
         self.stopPopulate.set()
+        self.ids.search.text = '' #clears search bar        
         return super().on_leave(*args)
 
       
@@ -426,6 +429,24 @@ class ColumnButton(Button):
                 r.rv.data = sorted(r.rv.data, key=lambda x: x[thisButton+'.text'], reverse=True)
 
 
+class LogSearchBar(TextInput):
+    word_list = ListProperty()
+    mData = ListProperty()
+
+    def __init__(self, **kwargs):
+        super(LogSearchBar, self).__init__(**kwargs)
+
+    def on_text(self, instance, value):
+        display_data = []
+        for row in self.parent.parent.parent.masterData:
+            if (self.text.lower() in row['name.text'].lower() or self.text.lower() in row['sid.text']
+                or self.text.lower() in row['time_in.text'][:-3] or self.text.lower() in row ['time_out.text'][:-3]): #[:-3] makes it so we ignore microseconds when searching
+                display_data.append(row)
+        if len(self.text) == 0:
+            display_data = self.parent.parent.parent.masterData
+        self.parent.parent.parent.ids.rv.data = display_data
+
+
 class MachinesAccess(Screen):
     masterData = []
 
@@ -455,6 +476,10 @@ class MachinesAccess(Screen):
             for x in range(numRows)]
         self.rv.data = sorted(self.rv.data, key=lambda x: x['name.text'])
         self.masterData = self.rv.data[:]
+
+    def on_leave(self, *args):
+        self.ids.search.text = '' #clears search bar
+        return super().on_leave(*args)
 
 
 class MachinesAllowed(Popup):
