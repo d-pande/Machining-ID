@@ -9,6 +9,7 @@ from kivy.uix.label import Label
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.lang import Builder
 from kivy.properties import ObjectProperty, StringProperty
+from kivy.core.window import Window
 
 import credentials as creds #file with db credentials
 import pymysql.cursors
@@ -182,4 +183,5 @@ class KeypadApp(App):
         return sm
 
 if __name__ == "__main__":
+    # Window.fullscreen = True #uncomment on raspberry pi
     KeypadApp().run()
