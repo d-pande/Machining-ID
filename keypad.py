@@ -183,5 +183,5 @@ class KeypadApp(App):
         return sm
 
 if __name__ == "__main__":
-    # Window.fullscreen = True #uncomment on raspberry pi
+    #Window.maximize() #uncomment on pi
     KeypadApp().run()
