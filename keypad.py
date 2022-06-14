@@ -158,6 +158,7 @@ class MachineScreen(Screen):
         for id in self.ids:
             self.ids[id].background_color = MachineScreen.black
             self.ids[id].color = MachineScreen.black
+            self.ids[id].disabled = False
         return super().on_leave(*args)
 
 class ConfirmationScreen(Screen):
