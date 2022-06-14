@@ -53,6 +53,8 @@ def log(id, machs): #logs a student entering the room given an id and list of ma
                 connection.commit()
 
 def checkID(id): #need to pass in id as a string
+    if(int(id) == 00000):
+        App.get_running_app().stop()
     connection.ping(True)
     with connection:
         with connection.cursor() as cursor:
