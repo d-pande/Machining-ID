@@ -18,6 +18,11 @@ import time
 from datetime import datetime
 import threading
 
+import RPi.GPIO as GPIO
+from time import sleep
+GPIO.setmode(GPIO.BOARD)
+GPIO.setup(11, GPIO.OUT)
+
 # Connecting to the Database
 connection = pymysql.connect(host=creds.dbhost,
                              user=creds.dbuser,
@@ -168,6 +173,15 @@ class ConfirmationScreen(Screen):
     def on_enter(self, *args):
          self.t = threading.Timer(3.0, lambda: ConfirmationScreen.goToID(self))
          self.t.start()
+
+         pwm=GPIO.PWM(11, 50)
+         pwm.start(0)
+         pwm.ChangeDutyCycle(2.5)
+         time.sleep(0.185)
+         pwm.ChangeDutyCycle(5.9)
+         time.sleep(0.2)
+         pwm.stop()
+
          return super().on_enter(*args)
     
     def goToID(self):
