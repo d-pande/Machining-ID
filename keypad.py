@@ -55,7 +55,7 @@ def checkID(id): #need to pass in id as a string
     connection.ping(True)
     with connection:
         with connection.cursor() as cursor:
-            cursor.execute("select exists(select * from students_machines where sid="+id+" and hide=0)")
+            cursor.execute("select exists(select * from students where student_id="+id+" and hide=0)")
             r = cursor.fetchall()
             return bool(r[0][0]) #returns true if student is in students and not hidden
 
