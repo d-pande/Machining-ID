@@ -55,9 +55,9 @@ def checkID(id): #need to pass in id as a string
     connection.ping(True)
     with connection:
         with connection.cursor() as cursor:
-            cursor.execute("select exists(select * from students_machines where sid="+id+")")
+            cursor.execute("select exists(select * from students_machines where sid="+id+" and hide=0)")
             r = cursor.fetchall()
-            return bool(r[0][0]) #returns true if student is in students_machines
+            return bool(r[0][0]) #returns true if student is in students and not hidden
 
 def signOut(id): #signs out a student given their ID, only updates last entry in log
     connection.ping(True)
