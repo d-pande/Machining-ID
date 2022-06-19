@@ -39,4 +39,4 @@ Machining-ID provides a simple sign-in/sign-out system for students using the MI
 
 [Ishaan Ghosh](https://github.com/22ghoshi) (@naahsi252#0008)
 
-[Kylan Chen](https://github.com/Naylk) (@Kylan#6969)
+[Kylan Chen](https://github.com/Naylk) (@Kylan#2105)
